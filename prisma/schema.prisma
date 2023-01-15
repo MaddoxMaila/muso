@@ -1,0 +1,77 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// all models
+model Admin {
+  id         String   @id @default(uuid())
+  name       String   @db.VarChar(100)
+  email      String   @unique @db.VarChar(155)
+  password   String
+  created_at DateTime @default(now())
+
+  playlist      Playlist[]
+  likedTracks   LikedTracks[]
+
+  @@map("admin")
+}
+
+
+model Track {
+  id          String    @id @default(uuid())
+  name        String    @db.VarChar(100)
+  album       String    @db.VarChar(100)
+  artist      String    @db.VarChar(100)
+  duration    Int
+  year        Int
+  artwork     String    @db.Text()
+  audio       String    @db.Text()
+  created_at  DateTime  @default(now())
+
+  playlistTracks    PlaylistTracks[]
+  likedTracks       LikedTracks[]
+
+  @@map("track")
+}
+
+model Playlist {
+  id          String    @id @default(uuid())
+  name        String    @db.VarChar(100)
+  playtime    Int
+  created_at  DateTime  @default(now())
+
+  playlistTracks    PlaylistTracks[]
+
+  userId      String
+  user        Admin     @relation(fields: [userId], references: [id])
+
+  @@map("playlist")
+}
+
+model PlaylistTracks {
+  id          String    @id @default(uuid())
+  created_at  DateTime  @default(now())
+
+  trackId     String
+  Track       Track     @relation(fields: [trackId], references: [id])
+
+  playlistId  String
+  Playlist    Playlist  @relation(fields: [playlistId], references: [id])
+
+  @@map("playlist_track")
+}
+
+model LikedTracks {
+  id          String    @id @default(uuid())
+
+  trackId     String
+  Track       Track     @relation(fields: [trackId], references: [id])
+
+  userId      String
+  user        Admin     @relation(fields: [userId], references: [id])
+}
