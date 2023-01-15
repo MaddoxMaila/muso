@@ -15,6 +15,7 @@ model Admin {
   password   String
   created_at DateTime @default(now())
 
+  Track         Track[]
   playlist      Playlist[]
   likedTracks   LikedTracks[]
 
@@ -36,13 +37,15 @@ model Track {
   playlistTracks    PlaylistTracks[]
   likedTracks       LikedTracks[]
 
+  userId      String
+  user        Admin     @relation(fields: [userId], references: [id])
+
   @@map("track")
 }
 
 model Playlist {
   id          String    @id @default(uuid())
   name        String    @db.VarChar(100)
-  playtime    Int
   created_at  DateTime  @default(now())
 
   playlistTracks    PlaylistTracks[]
@@ -68,6 +71,7 @@ model PlaylistTracks {
 
 model LikedTracks {
   id          String    @id @default(uuid())
+  trackUserId String    @unique
 
   trackId     String
   Track       Track     @relation(fields: [trackId], references: [id])
