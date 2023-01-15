@@ -1,9 +1,14 @@
 import { Admin } from '@prisma/client';
-declare namespace Express {
-    export interface Request {
-        user?: Admin
+import {Express, Request} from "express";
+
+declare global{
+    namespace Express {
+        interface Request {
+            user: Admin
+        }
     }
 }
+
 declare namespace NodeJS {
     interface ProcessEnv {
         PORT?: string;
