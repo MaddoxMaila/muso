@@ -1,9 +1,9 @@
 import { Response, Request } from "express";
-import fileUpload from "express-fileupload";
 import ApiResponse from "../../libs/ApiResponse";
 import MusoSingleton from "../../libs/Muso";
+import DatabaseSingleton from "../../prisma/DatabaseSingleton";
 
-const muso = MusoSingleton.getMuso()
+const db = DatabaseSingleton.getDb()
 
 const TracksController = {
     getTrack: async (request: Request, response: Response) => {
@@ -14,7 +14,9 @@ const TracksController = {
              */
             const { id } = request.params
             
-            const track = await muso.getTrack(id)
+            const track = await MusoSingleton
+                                            .getMuso()
+                                            .getTrack(id)
 
             if(!track) throw new Error("could not find the specified song.")
 
@@ -32,7 +34,11 @@ const TracksController = {
 
         try{
 
-            const tracks = await muso.getAllTracks()
+            const tracks = await MusoSingleton
+                                              .getMuso()
+                                              .getAllTracks(request.user?.id)
+
+            if(!tracks) throw new Error("failed to retrieve all tracks")
 
             response.status(200).json(
                 ApiResponse(true, tracks.length > 0 ? "songs found" : "could not find any songs, please add songs!.", {tracks: tracks})
@@ -60,7 +66,9 @@ const TracksController = {
              const audio  = request.files?.audio
              const artwork = request.files?.artwork
 
-             const track = await muso.addTrack({name, album, artist, duration, year, audio, artwork})
+             const track = await MusoSingleton
+                                              .getMuso()
+                                              .addTrack({name, album, artist, duration: parseInt(duration), year: parseInt(year), audio, artwork, userId: request.user?.id})
 
              if(!track) throw new Error("failed to add track")
 
@@ -80,7 +88,9 @@ const TracksController = {
             
             const { id } = request.params
 
-            const track = muso.deleteTrack(id)
+            const track = MusoSingleton
+                                       .getMuso()
+                                       .deleteTrack(id)
 
             if(!track) throw new Error("failed to delete track")
 
@@ -94,6 +104,50 @@ const TracksController = {
             )
         }
 
+    },
+    likeTrack: async (request: Request, response: Response) => {
+
+        try{
+
+            const { id } = request.params
+
+            const like = await MusoSingleton
+                                     .getMuso()
+                                     .likeOrUnlikeTrack({trackId: id, userId: request.user?.id})
+
+            if(!like) throw new Error("Failed to like track")
+
+            response.status(200).json(
+                ApiResponse(false, `${like.liked ? 'Liked' : 'Unliked'} track`, {track: like})
+            )
+
+        }catch(e: any){
+            response.status(500).json(
+                ApiResponse(true, e.message, e)
+            )
+        }
+    },
+    getLikedTracks: async (request: Request, response: Response) => {
+        
+        try {
+
+            // if(!request.user) throw new Error("Auth")
+
+            const likedTracks = await MusoSingleton
+                                                  .getMuso()
+                                                  .getLikedTracks(request.user?.id)
+            
+            if(!likedTracks) throw new Error("Failed to compile liked tracks.")
+
+            response.status(200).json(
+                ApiResponse(false, likedTracks.length > 0 ? "Tracks you have liked" : "No liked tracks found", { tracks: likedTracks, user: request.user?.id })
+            )
+
+        } catch (e: any) {
+            response.status(500).json(
+                ApiResponse(true, e.message, e)
+            )
+        }
     },
     shuffleTracks: async (request: Request, response: Response) => {
 

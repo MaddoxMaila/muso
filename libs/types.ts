@@ -3,7 +3,8 @@ import fileUpload from "express-fileupload"
 export type MusoFile = fileUpload.UploadedFile | fileUpload.UploadedFile[]  | undefined 
 
 export type Track = {
-    name        : string,
+    userId      : string
+    name        : string
     album       : string
     artist      : string
     duration    : number

@@ -1,11 +1,11 @@
 import { Router } from "express";
-import AuthController from "../controllers/auth/AuthController";
 import TracksController from "../controllers/tracks/TracksController";
+
 const router = Router()
 
 /**
  * @description 1. get all tracks
- * @endpoint http://localhost:2828/tracks/all
+ * @endpoint http://localhost:2828/api/v1/tracks/all
  */
 router.get("/all", TracksController.getAllTracks)
 
@@ -29,7 +29,13 @@ router.post("/save", TracksController.addTrack)
 router.delete("/delete/:id", TracksController.deleteTrack)
 
 /**
- * @description 5. shuffle list of songs
+ * @description 5. add a like to a track
+ * @endpoint http://localhost:2828/api/v1/tracks/like/:id
+ */
+router.get("/like/:id", TracksController.likeTrack)
+
+/**
+ * @description 6. shuffle list of tracks
  * @endpoint http://localhost:2828/api/v1/tracks/shuffle
  */
 router.get("/shuffle", TracksController.shuffleTracks)
