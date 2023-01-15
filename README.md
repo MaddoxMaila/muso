@@ -1,8 +1,6 @@
 # Muso API
 
-## # Node Express Prisma Restful API
-
-Set up MVC using Node, Express,Prisma (PostgreSQL) , JWT and bcrypt.
+Set up API using Node, Express,Prisma (PostgreSQL) , JWT and bcrypt.
 ___ 
 
 >> Tech Stack
@@ -18,27 +16,6 @@ ___
  * @design Tshepang Maila
  */
 ```
-
->> Folder Structure
-___
- * routers
-    * /middleware
-        * AuthMid.ts
-        * ErrorMid.ts
-    * authRouter.ts
-    * testRouter.ts
- * controllers
-   * AuthController.ts
-   * TestController.ts
- * models
-   * ApiResponse.ts (response format)
- * utils
-   * Define.ts (all constant value)
-   * DB_Define.ts (all SQL+DB constant value)
-   * Helper.ts (all helper functions)
- * server.ts
- * package.json
- * .env
 
 ># Deployments
 
