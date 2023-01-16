@@ -14,7 +14,6 @@ import createUser from './createDummyUser';
 import ApiKeyMiddleware from './routers/middleware/ApiKeyMiddleware';
 import AddUserMiddleware from './routers/middleware/AddUserMiddleware';
 
-
 //init
 dotenv.config()
 
@@ -30,7 +29,6 @@ app.use(express.static(`${__dirname}/public/artwork`))
 app.use(express.static(`${__dirname}/public/audios`))
 //enable cros 
 app.use(cors({ origin: true, credentials: true }))
-
 
 const BASE_URL: string = "/api/v1"
 const MIDDLWARES = [ApiKeyMiddleware, AddUserMiddleware]
