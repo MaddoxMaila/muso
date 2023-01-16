@@ -10,7 +10,12 @@ class Playlist {
     constructor(){ this.db = DatabaseSingleton.getDb() }
 
     async createPlaylist(playlist: {name: string, userId: string}){
-
+        /**
+         * @description
+         * Create a playlist
+         * @param
+         *      playlist: {name: string, userId: string} - name of the playlist, user id of the user creating the playlist
+         */
         try {
 
             return await this.db.playlist.create({
@@ -24,7 +29,12 @@ class Playlist {
     }
 
     async addTrackToPlaylist(playlistTrack: {playlistId: string, trackId: string}){
-
+        /**
+         * @description
+         * Add a track to playlist
+         * @param
+         *      playlistTrack: {playlistId: string, trackId: string} - playlist id of to add the track in, track id of the track being added
+         */
         try{
 
             return await this.db.playlistTracks.create({
@@ -37,12 +47,17 @@ class Playlist {
 
     }
 
-    async deletePlaylist(id: string){
-
+    async deletePlaylist(playlistId: string){
+        /**
+         * @description
+         * Delete playlist
+         * @param
+         *       playlistId: string - playlist id of the playlist to be deleted    
+         */
         try{
 
             return await this.db.playlist.delete({
-                where: {id: id}
+                where: {id: playlistId}
             })
 
         }catch(e: any){
@@ -51,7 +66,12 @@ class Playlist {
     }
 
     async getPlaylists(userId: string){
-
+        /**
+         * @description
+         * Get all playlists created by user
+         * @param
+         *      userId: string - user id of the user who the playlists belong to
+         */
         try {
             
             return await this.db.playlist.findMany({
@@ -65,7 +85,12 @@ class Playlist {
     }
 
     async getPlaylistTracks(ids: {playlistId: string, userId: string}){
-
+        /**
+         * @description
+         * Get a playlist and all of it's songs
+         * @param
+         *      ids: {playlistId: string, userId: string} - playlist id of the playlist to get tracks of, user id to only get tracks that were by the user in the playlist
+         */
         try {
             
             return await this.db.playlist.findFirst({

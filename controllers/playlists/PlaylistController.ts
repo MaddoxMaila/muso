@@ -1,7 +1,7 @@
 import { Response, Request } from "express";
 import { validationResult } from "express-validator";
 import ApiResponse from "../../libs/ApiResponse";
-import MusoError from "../../libs/MusoError";
+import ValidationError from "../../libs/ValidationError";
 import PlaylistSingleton from "../../libs/Playlist";
 import DatabaseSingleton from "../../prisma/DatabaseSingleton";
 
@@ -10,11 +10,10 @@ const db = DatabaseSingleton.getDb()
 
 const PlaylistController = {
     getPlaylists: async (request: Request, response: Response) => {
-
         /**
-         * 
+         * @description
+         * retrieve and compile all playlists created by user
          */
-
         try {
 
             const playlists = await PlaylistSingleton
@@ -35,13 +34,16 @@ const PlaylistController = {
 
     },
     getPlaylistTracks: async (request: Request, response: Response) => {
-
+        /**
+         * @description
+         * retrieve and compile all tracks in a playlist
+         */
         try{
 
             const { id } = request.params
 
             const errors = validationResult(request);
-            if (!errors.isEmpty()) throw new MusoError("failed validations", {errors: errors.array()})
+            if (!errors.isEmpty()) throw new ValidationError("failed validations", {errors: errors.array()})
 
             const playlistWithTracks = await PlaylistSingleton
                                                             .playlistInstance()
@@ -61,14 +63,17 @@ const PlaylistController = {
 
     },
     createPlaylist: async (request: Request, response: Response) => {
-
+        /**
+         * @description
+         * create a play with a given name, check if the playlist name already exists
+         */
         try {
 
             const { name } = request.body
             const playlistData: {name: string, userId: string} = {name: name, userId: request.user.id}
 
             const errors = validationResult(request);
-            if (!errors.isEmpty()) throw new MusoError("failed validations", {errors: errors.array()})
+            if (!errors.isEmpty()) throw new ValidationError("failed validations", {errors: errors.array()})
 
             // playlist can have the same name but users should be different
             const c = await db.playlist.count({
@@ -95,13 +100,16 @@ const PlaylistController = {
         
     },
     addTrackToPlaylist: async (request: Request, response: Response) => {
-
+        /**
+         * @description
+         * add track to a playlist using playlistId & trackId from request
+         */
         try{
 
             const { playlistId, trackId } = request.body
 
             const errors = validationResult(request);
-            if (!errors.isEmpty()) throw new MusoError("failed validations", {errors: errors.array()})
+            if (!errors.isEmpty()) throw new ValidationError("failed validations", {errors: errors.array()})
 
             // Could let prisma catch constraint errors but I wanted to control the narrative??
             if(
@@ -130,13 +138,16 @@ const PlaylistController = {
 
     },
     deletePlaylist: async (request: Request, response: Response) => {
-        
+        /**
+         * @description
+         * delete playlist 
+         */
         try {
             
             const { id } = request.params
 
             const errors = validationResult(request);
-            if (!errors.isEmpty()) throw new MusoError("failed validations", {errors: errors.array()})
+            if (!errors.isEmpty()) throw new ValidationError("failed validations", {errors: errors.array()})
 
 
             const deletedPlaylist = await PlaylistSingleton
@@ -163,7 +174,7 @@ const PlaylistController = {
             const {id} = request.body
 
             const errors = validationResult(request);
-            if (!errors.isEmpty()) throw new MusoError("failed validations", {errors: errors.array()})
+            if (!errors.isEmpty()) throw new ValidationError("failed validations", {errors: errors.array()})
 
 
             const deletedPlaylistTrack = await PlaylistSingleton
