@@ -82,9 +82,11 @@ const TracksController = {
              if(!audio) throw new Error("Missing audio file")
              if(!artwork) throw new Error("Missing artwork file")
 
+             // check for allow file extensions
              if(!isAllowedFile(audio)) throw new Error("Unsupported file type, make sure it is an Audio file")
              if(!isAllowedFile(artwork)) throw new Error("Unsupported file type, make sure it is an Image file")
 
+             // check & catch any other validations
              const errors = validationResult(request);
              if (!errors.isEmpty()) throw new ValidationError("failed validations", {errors: errors.array()})
 
