@@ -10,6 +10,18 @@ const router = Router()
 router.get("/all", TracksController.getAllTracks)
 
 /**
+ * @description 5. get all liked tracks
+ * @endpoint http://localhost:2828/api/v1/tracks/liked
+ */
+router.get("/liked", TracksController.getLikedTracks)
+
+/**
+ * @description 6. shuffle list of tracks
+ * @endpoint http://localhost:2828/api/v1/tracks/shuffle
+ */
+router.get("/shuffle", TracksController.shuffleTracks)
+
+/**
  * @description 2. get specified track
  * @endpoint http://localhost:2828/api/v1/tracks/:id
  */
@@ -34,10 +46,5 @@ router.delete("/delete/:id", TracksController.deleteTrack)
  */
 router.get("/like/:id", TracksController.likeTrack)
 
-/**
- * @description 6. shuffle list of tracks
- * @endpoint http://localhost:2828/api/v1/tracks/shuffle
- */
-router.get("/shuffle", TracksController.shuffleTracks)
 
 export default router

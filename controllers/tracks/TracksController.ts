@@ -138,7 +138,7 @@ const TracksController = {
             if(!likedTracks) throw new Error("Failed to compile liked tracks.")
 
             response.status(200).json(
-                ApiResponse(false, likedTracks.length > 0 ? "Tracks you have liked" : "No liked tracks found", { tracks: likedTracks, user: request.user?.id })
+                ApiResponse(false, likedTracks.length > 0 ? "Tracks you have liked" : "No liked tracks found", { tracks: likedTracks, user: request.user })
             )
 
         } catch (e: any) {
