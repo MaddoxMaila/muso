@@ -1,6 +1,8 @@
 import { PrismaClientValidationError } from '@prisma/client/runtime';
-import { PrismaClient, Prisma, Track } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import DatabaseSingleton from '../prisma/DatabaseSingleton';
+import TracksSingleton from './Track';
+import { LikedTrack } from './types';
 
 
 class Playlist {
@@ -103,15 +105,15 @@ class Playlist {
             const playlistWithTracks: {name: string, 
                                        id: string,
                                        created_at: Date, 
-                                       playlistTracks: Track[]} = {name: playlist.name, id: playlist.id, created_at: playlist.created_at, playlistTracks: []}
+                                       playlistTracks: LikedTrack[]} = {name: playlist.name, id: playlist.id, created_at: playlist.created_at, playlistTracks: []}
 
             
             for(let ptrack of playlist.playlistTracks){
 
-                const t = await this.db.track.findFirst({where: {id: ptrack.trackId}})
+                const t = await this.db.track.findFirst({where: {id: ptrack.trackId}, include: {likedTracks: true}})
                 if(!t) return
 
-                playlistWithTracks.playlistTracks.push(t)
+                playlistWithTracks.playlistTracks.push(TracksSingleton.getInstance().addLikedFieldToTrack(t))
 
             }
 
