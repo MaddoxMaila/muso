@@ -1,6 +1,8 @@
 import { Response, Request } from "express";
+import { validationResult } from "express-validator";
 import ApiResponse from "../../libs/ApiResponse";
 import MusoSingleton from "../../libs/Muso";
+import MusoError from "../../libs/MusoError";
 import DatabaseSingleton from "../../prisma/DatabaseSingleton";
 
 const db = DatabaseSingleton.getDb()
@@ -13,6 +15,9 @@ const TracksController = {
              * Validation is done on the route definition
              */
             const { id } = request.params
+
+            const errors = validationResult(request);
+            if (!errors.isEmpty()) throw new MusoError("failed validations", {errors: errors.array()})
             
             const track = await MusoSingleton
                                             .getMuso()
@@ -66,6 +71,12 @@ const TracksController = {
              const audio  = request.files?.audio
              const artwork = request.files?.artwork
 
+             if(!audio) throw new Error("Missing audio file")
+             if(!artwork) throw new Error("Missing artwork file")
+
+             const errors = validationResult(request);
+             if (!errors.isEmpty()) throw new MusoError("failed validations", {errors: errors.array()})
+
              const track = await MusoSingleton
                                               .getMuso()
                                               .addTrack({name, album, artist, duration: parseInt(duration), year: parseInt(year), audio, artwork, userId: request.user?.id})
@@ -87,6 +98,9 @@ const TracksController = {
         try {
             
             const { id } = request.params
+
+            const errors = validationResult(request);
+            if (!errors.isEmpty()) throw new MusoError("failed validations", {errors: errors.array()})
 
             const track = MusoSingleton
                                        .getMuso()
@@ -110,6 +124,9 @@ const TracksController = {
         try{
 
             const { id } = request.params
+
+            const errors = validationResult(request);
+            if (!errors.isEmpty()) throw new MusoError("failed validations", {errors: errors.array()})
 
             const like = await MusoSingleton
                                      .getMuso()
