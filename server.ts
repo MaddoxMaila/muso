@@ -5,12 +5,11 @@ import cookieparser from 'cookie-parser'
 import helmet from 'helmet'
 import fileUpload from 'express-fileupload'
 
-import ErrorMid from './routers/middleware/ErrorMid';
-
 //import routes
 import Routers from './routers/index';
 import createUser from './createDummyUser';
 
+import ErrorMid from './routers/middleware/ErrorMid';
 import ApiKeyMiddleware from './routers/middleware/ApiKeyMiddleware';
 import AddUserMiddleware from './routers/middleware/AddUserMiddleware';
 
@@ -48,6 +47,10 @@ app.use(`${BASE_URL}/search`, MIDDLWARES, Routers.searchRouter)
 //catch all error
 app.use(ErrorMid);
 
+/**
+ * Some of the functionalities I created needs user,
+ * This would just create a user one time on a first server up, and avoids creating the user again after subsequent application starts
+ */
 createUser({
     name: "Tshepang",
     email: "tshepang.maila@ayoba.com",
