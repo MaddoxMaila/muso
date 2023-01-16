@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { validationResult } from "express-validator";
 import ApiResponse from "../libs/ApiResponse";
-import MusoError from "../libs/MusoError";
+import ValidationError from "../libs/ValidationError";
 import DatabaseSingleton from "../prisma/DatabaseSingleton";
 
 const db = DatabaseSingleton.getDb()
@@ -18,7 +18,7 @@ const SearchController = {
             const {q} = request.query
 
             const errors = validationResult(request);
-            if (!errors.isEmpty()) throw new MusoError("failed validations", {errors: errors.array()})
+            if (!errors.isEmpty()) throw new ValidationError("failed validations", {errors: errors.array()})
 
             const searchQuery = `%${q}%`
 
