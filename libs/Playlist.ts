@@ -50,11 +50,40 @@ class Playlist {
         }
     }
 
-    async deletePlaylistTrack(id: string){
+    async getPlaylists(userId: string){
+
+        try {
+            
+            return await this.db.playlist.findMany({
+                where: {userId: userId}
+            })
+
+        } catch (e: any) {
+            if(e instanceof PrismaClientValidationError) return null
+        }
+
+    }
+
+    async getPlaylistTracks(ids: {playlistId: string, userId: string}){
+
+        try {
+            
+            return await this.db.playlist.findFirst({
+                where: {id: ids.playlistId, userId: ids.userId},
+                include: {playlistTracks: true}
+            })
+
+        } catch (e: any) {
+            if(e instanceof PrismaClientValidationError) return null
+        }
+
+    }
+
+    async deletePlaylistTrack(ids: {playlistId: string, trackId: string}){
 
         try {
 
-            
+            // To Implement!
 
         } catch (e: any) {
             if(e instanceof PrismaClientValidationError) return null
