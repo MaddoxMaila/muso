@@ -131,8 +131,6 @@ const TracksController = {
         
         try {
 
-            // if(!request.user) throw new Error("Auth")
-
             const likedTracks = await MusoSingleton
                                                   .getMuso()
                                                   .getLikedTracks(request.user?.id)
