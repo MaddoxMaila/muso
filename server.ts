@@ -48,7 +48,7 @@ app.use(`${BASE_URL}/search`, MIDDLWARES, Routers.searchRouter)
 app.use(ErrorMid);
 
 /**
- * Some of the functionalities I created needs user,
+ * Some of the functionalities I created needs a user,
  * This would just create a user one time on a first server up, and avoids creating the user again after subsequent application starts
  */
 createUser({
