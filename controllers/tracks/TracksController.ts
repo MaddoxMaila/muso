@@ -1,6 +1,7 @@
 import { Response, Request } from "express";
 import { validationResult } from "express-validator";
 import ApiResponse from "../../libs/ApiResponse";
+import { isAllowedFile } from "../../libs/ResourceUploader";
 import TracksSingleton from "../../libs/Track";
 import ValidationError from "../../libs/ValidationError";
 import DatabaseSingleton from "../../prisma/DatabaseSingleton";
@@ -80,6 +81,9 @@ const TracksController = {
 
              if(!audio) throw new Error("Missing audio file")
              if(!artwork) throw new Error("Missing artwork file")
+
+             if(!isAllowedFile(audio)) throw new Error("Unsupported file type, make sure it is an Audio file")
+             if(!isAllowedFile(artwork)) throw new Error("Unsupported file type, make sure it is an Image file")
 
              const errors = validationResult(request);
              if (!errors.isEmpty()) throw new ValidationError("failed validations", {errors: errors.array()})

@@ -1,5 +1,5 @@
-import { saveArtwork, saveAudio } from './MusoResourceUploader';
-import { LikedTracks, Track, PrismaClient } from '@prisma/client';
+import { saveArtwork, saveAudio } from './ResourceUploader';
+import { LikedTracks, PrismaClient } from '@prisma/client';
 import DatabaseSingleton from "../prisma/DatabaseSingleton"
 import { LikedTrack, TrackType, TrackWithLikedTrack } from './types'
 import { PrismaClientValidationError } from '@prisma/client/runtime';
