@@ -1,6 +1,6 @@
 import { Router } from "express";
-import SearchController from "../controllers/SearchController";
-import { validate } from "./validations";
+import SearchController from "../../controllers/SearchController";
+import { validate } from "../validations";
 
 const router = Router()
 

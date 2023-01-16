@@ -1,7 +1,6 @@
 import { Router } from "express";
-import { param, body } from "express-validator";
-import PlaylistController from "../controllers/playlists/PlaylistController";
-import { validate } from "./validations";
+import PlaylistController from "../../controllers/playlists/PlaylistController";
+import { validate } from "../validations";
 
 const router = Router()
 

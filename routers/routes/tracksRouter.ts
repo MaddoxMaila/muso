@@ -1,7 +1,7 @@
-import { EMPTY_FIELD, validate } from './validations';
+import { EMPTY_FIELD, validate } from '../validations';
 import { Router } from "express";
-import TracksController from "../controllers/tracks/TracksController";
-import { check, ValidationChain } from "express-validator";
+import TracksController from "../../controllers/tracks/TracksController";
+import { check } from "express-validator";
 
 const router = Router()
 
