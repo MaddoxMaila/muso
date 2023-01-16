@@ -6,6 +6,50 @@ import DatabaseSingleton from "../../prisma/DatabaseSingleton";
 const db = DatabaseSingleton.getDb()
 
 const PlaylistController = {
+    getPlaylists: async (request: Request, response: Response) => {
+
+        try {
+
+            const playlists = await PlaylistSingleton
+                                                    .playlistInstance()
+                                                    .getPlaylists(request.user.id)
+
+            if(!playlists) throw new Error("failed to retrieve playlists")
+
+            response.status(200).json(
+                ApiResponse(false, "playlists compiled", {playlists: playlists})
+            )
+            
+        } catch (e: any) {
+            response.status(500).json(
+                ApiResponse(true, e.message, e)
+            )
+        }
+
+    },
+    getPlaylistTracks: async (request: Request, response: Response) => {
+
+        try{
+
+            const { id } = request.params
+
+            const playlistWithTracks = await PlaylistSingleton
+                                                            .playlistInstance()
+                                                            .getPlaylistTracks({playlistId: id, userId: request.user.id})
+            
+            if(!playlistWithTracks) throw new Error("failed to retrieve playlist with its tracks")
+
+            response.status(200).json(
+                ApiResponse(false, "playlist with its tracks compiled", {playlist: playlistWithTracks})
+            )
+
+        }catch(e: any){
+            response.status(200).json(
+                ApiResponse(true, e.message, e)
+            )
+        }
+
+    },
     createPlaylist: async (request: Request, response: Response) => {
 
         try {
