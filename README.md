@@ -1,11 +1,9 @@
 # Muso API
 
-## # Node Express Prisma Restful API
-
-Set up MVC using Node, Express,Prisma (PostgreSQL) , JWT and bcrypt.
+Set up API using Node, Express,Prisma (PostgreSQL) , JWT and bcrypt.
 ___ 
 
->> Tech Stack
+## Tech Stack
  * NODE JS 
  * TypeScript
  * Express JS
@@ -19,28 +17,7 @@ ___
  */
 ```
 
->> Folder Structure
-___
- * routers
-    * /middleware
-        * AuthMid.ts
-        * ErrorMid.ts
-    * authRouter.ts
-    * testRouter.ts
- * controllers
-   * AuthController.ts
-   * TestController.ts
- * models
-   * ApiResponse.ts (response format)
- * utils
-   * Define.ts (all constant value)
-   * DB_Define.ts (all SQL+DB constant value)
-   * Helper.ts (all helper functions)
- * server.ts
- * package.json
- * .env
-
-># Deployments
+## Deployments
 
 >> scripts in package.json
 ```json
@@ -56,15 +33,40 @@ ___
 
 ```
 
->> how to deploy
+## How To Build & Run
 
-```javascript
-  //build the project
-  npm run build
-  //serve locally
-  npm run serve 
-  //serve in dev mode
-  npm run dev
+Would have loved to use docker-compose the two services but because of time was not able to achieve that.
+
+### 1 Create Database
+
+- Make sure you have a .env file in the project root
+- Then run the following command to spin up a postgres container
+```
+$ docker-compose up --build
 ```
 
+### 2 Build & Run Server
 
+- To migrate prisma db schemas & generate db objects
+```
+$ npm run p-mg
+```
+
+- Build typescipt 
+```
+$ npm run build
+```
+
+- If everything worked perfect, Run server
+```
+$ npm run start
+```
+
+## Test API with Postman
+
+To test the API please look for  ``` Muso API.postman_collection.json ``` in the root directory.
+
+
+I utiliaze two collection variables that are need by subsequest requests. namely ```saved_track_id ``` & ```saved_playlist_id ```, They are set after a response has been received from ```Tracks/Create Track``` & ```Playlists/Create Playlist``` requests.
+
+So if you want to test fully and correctly, please do the requests by order they appear.

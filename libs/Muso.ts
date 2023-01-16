@@ -1,5 +1,5 @@
 import { saveArtwork, saveAudio } from './MusoResourceUploader';
-import { PrismaClient } from '@prisma/client';
+import { LikedTracks, PrismaClient } from '@prisma/client';
 import DatabaseSingleton from "../prisma/DatabaseSingleton"
 import { Track } from './types'
 import { PrismaClientValidationError } from '@prisma/client/runtime';
@@ -11,22 +11,38 @@ class Muso {
 
     constructor(){ this.db = DatabaseSingleton.getDb() }
     
-    async getAllTracks(){
+    async getAllTracks(userId: string){
         /**
          * Get All tracks, if there are no tracks an empty array will be returned
          */
-        return await this.db.track.findMany()
+        try {
+
+            return await this.db.track.findMany({
+                where: {userId: userId},
+                include: {likedTracks: true},
+            })
+
+        } catch (e: any) {
+            if(e instanceof PrismaClientValidationError) return null
+        }
+
     }
 
     async getTrack(id: string){
         /**
          * Get a track based on the UUID of that track
          */
-        return await this.db.track.findUnique({
-            where: {
-                id: id
-            }
-        })
+        try {
+
+            return await this.db.track.findUnique({
+                where: {
+                    id: id
+                }
+            })
+            
+        } catch (e: any) {
+            if(e instanceof PrismaClientValidationError) return null
+        }
     }
 
     async addTrack(track: Track){
@@ -54,10 +70,7 @@ class Muso {
             })
             
         } catch (e: any) {
-            
-            if(e instanceof PrismaClientValidationError){
-                return null
-            }
+            if(e instanceof PrismaClientValidationError) return null
 
         }
     }
@@ -67,11 +80,63 @@ class Muso {
          * Delete track
          */
 
-        return await this.db.track.delete({
-            where: {
-                id: id
+        try {
+            
+            return await this.db.track.delete({
+                where: {
+                    id: id
+                }
+            })
+
+        } catch (e: any) {
+            if(e instanceof PrismaClientValidationError) return null
+        }
+    }
+
+    async likeOrUnlikeTrack(like: {trackId: string, userId: string}){
+        try {
+
+            let likeTrack: LikedTracks | null = null
+            let liked: boolean = false
+
+            if(
+                await this.db.likedTracks.count({where: {id: like.trackId}}) === 0
+            ){
+
+                // Like the track
+                likeTrack = await this.db.likedTracks.create({
+                    data: {...like, trackUserId: `${like.trackId}-${like.userId}`}
+                })
+                liked = true
+
+            }else{
+
+                // Unlike the track
+                likeTrack = await this.db.likedTracks.delete({
+                    where: {trackUserId: `${like.trackId}-${like.userId}`}
+                })
+                liked = false
+
             }
-        })
+
+            return {liked, likeTrack}
+            
+        } catch (e: any) {
+            if(e instanceof PrismaClientValidationError) return null
+        }
+    }
+
+    async getLikedTracks(userId: string){
+        try{
+
+            return await this.db.likedTracks.findMany({
+                where: { userId: userId },
+                include: { Track: true }
+            })
+
+        }catch(e: any){
+            if(e instanceof PrismaClientValidationError) return null
+        }
     }
 }
 

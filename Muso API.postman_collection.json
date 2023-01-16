@@ -1,0 +1,418 @@
+{
+	"info": {
+		"_postman_id": "4fcfbd69-ca5c-4a46-aff3-63731a833b8e",
+		"name": "Muso API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tracks",
+			"item": [
+				{
+					"name": "Add New Track",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Saved Track\", function () {",
+									"    ",
+									"    var data = pm.response.json();",
+									"    pm.collectionVariables.set(\"saved_track_id\", data.track.id);",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Lifestyle",
+									"type": "default"
+								},
+								{
+									"key": "album",
+									"value": "Reece Effect",
+									"type": "default"
+								},
+								{
+									"key": "artist",
+									"value": "Areece",
+									"type": "default"
+								},
+								{
+									"key": "duration",
+									"value": "190",
+									"type": "default"
+								},
+								{
+									"key": "year",
+									"value": "2019",
+									"type": "default"
+								},
+								{
+									"key": "audio",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "artwork",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_url}}/tracks/save",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"tracks",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Tracks",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_url}}/tracks/all",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"tracks",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One Track",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/tracks/{{saved_track_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"tracks",
+								"{{saved_track_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Track",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/tracks/delete/{{saved_track_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"tracks",
+								"delete",
+								"{{saved_track_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like Track",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/tracks/like/{{saved_track_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"tracks",
+								"like",
+								"{{saved_track_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Liked Tracks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/tracks/liked",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"tracks",
+								"liked"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Playlists",
+			"item": [
+				{
+					"name": "Create Playlist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Set Playlist ID\", function () {",
+									"    ",
+									"    var data = pm.response.json()",
+									"",
+									"    pm.collectionVariables.set(\"saved_playlist_id\", data.playlist.id);",
+									"",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Hip Hop",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_url}}/playlists/new",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"playlists",
+								"new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Track To Playlist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "playlistId",
+									"value": "{{saved_playlist_id}}",
+									"type": "default"
+								},
+								{
+									"key": "trackId",
+									"value": "{{saved_track_id}}",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_url}}/playlists/add-track",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"playlists",
+								"add-track"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Playlist",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/playlists/delete/{{saved_playlist_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"playlists",
+								"delete",
+								"{{saved_playlist_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Your Playlists",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/playlists/all",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"playlists",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Playlist Tracks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/playlists/{{saved_playlist_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"playlists",
+								"{{saved_playlist_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}/search/?q=Hop",
+					"host": [
+						"{{api_url}}"
+					],
+					"path": [
+						"search",
+						""
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "Hop"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api_url}}",
+					"host": [
+						"{{api_url}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "maddox",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "x-api-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "saved_track_id",
+			"value": ""
+		},
+		{
+			"key": "saved_playlist_id",
+			"value": ""
+		}
+	]
+}

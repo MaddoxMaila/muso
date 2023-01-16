@@ -4,7 +4,7 @@ import ApiResponse from '../../libs/ApiResponse';
 import DatabaseSingleton from '../../prisma/DatabaseSingleton';
 
 
-const AuthMid = async (req: Request, res: Response, next: NextFunction) => {
+const AddUserMiddleware = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
         
@@ -15,14 +15,14 @@ const AuthMid = async (req: Request, res: Response, next: NextFunction) => {
         const user  = await db.admin.findFirst()
         if(!user?.id) throw new Error("Authorized user does not exist")
 
-        //set user email in request
+        //set user in request
         req.user = user
         
         next()
     } catch (e: any) {
-        res.status(401).json(ApiResponse<Error>(true, e.message, e))
+        res.status(401).json(ApiResponse(true, e.message, e))
     }
 
 }
 
-export default AuthMid
+export default AddUserMiddleware

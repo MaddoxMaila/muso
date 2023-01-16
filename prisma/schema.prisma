@@ -3,6 +3,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// datasource db {
+//   provider = "sqlite"
+//   url      = "file:./dev.db"
+// }
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,11 +15,12 @@ generator client {
 // all models
 model Admin {
   id         String   @id @default(uuid())
-  name       String   @db.VarChar(100)
-  email      String   @unique @db.VarChar(155)
+  name       String   
+  email      String   @unique
   password   String
   created_at DateTime @default(now())
 
+  Track         Track[]
   playlist      Playlist[]
   likedTracks   LikedTracks[]
 
@@ -24,25 +30,27 @@ model Admin {
 
 model Track {
   id          String    @id @default(uuid())
-  name        String    @db.VarChar(100)
-  album       String    @db.VarChar(100)
-  artist      String    @db.VarChar(100)
+  name        String    
+  album       String    
+  artist      String    
   duration    Int
   year        Int
-  artwork     String    @db.Text()
-  audio       String    @db.Text()
+  artwork     String    
+  audio       String    
   created_at  DateTime  @default(now())
 
   playlistTracks    PlaylistTracks[]
   likedTracks       LikedTracks[]
+
+  userId      String
+  user        Admin     @relation(fields: [userId], references: [id])
 
   @@map("track")
 }
 
 model Playlist {
   id          String    @id @default(uuid())
-  name        String    @db.VarChar(100)
-  playtime    Int
+  name        String    
   created_at  DateTime  @default(now())
 
   playlistTracks    PlaylistTracks[]
@@ -68,6 +76,7 @@ model PlaylistTracks {
 
 model LikedTracks {
   id          String    @id @default(uuid())
+  trackUserId String    @unique
 
   trackId     String
   Track       Track     @relation(fields: [trackId], references: [id])

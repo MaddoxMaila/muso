@@ -12,6 +12,7 @@ import Routers from './routers/index';
 import createUser from './createDummyUser';
 
 import ApiKeyMiddleware from './routers/middleware/ApiKeyMiddleware';
+import AddUserMiddleware from './routers/middleware/AddUserMiddleware';
 
 
 //init
@@ -32,6 +33,8 @@ app.use(cors({ origin: true, credentials: true }))
 
 
 const BASE_URL: string = "/api/v1"
+const MIDDLWARES = [ApiKeyMiddleware, AddUserMiddleware]
+
 //routers
 app.get(`${BASE_URL}`, (_, res) => res.send("Running... 🚀"))
 
@@ -40,17 +43,18 @@ app.get(`${BASE_URL}`, (_, res) => res.send("Running... 🚀"))
  * Also added API key middleware here in the top level of which the inclusion will trickle down to each sub-route
  */
 app.use(`${BASE_URL}/auth`, ApiKeyMiddleware, Routers.authRouter)
-app.use(`${BASE_URL}/tracks`, ApiKeyMiddleware, Routers.tracksRouter)
-// app.use("/playlists", Routers.playlistRouter)
+app.use(`${BASE_URL}/tracks`, MIDDLWARES, Routers.tracksRouter)
+app.use(`${BASE_URL}/playlists`, MIDDLWARES,Routers.playlistRouter)
+app.use(`${BASE_URL}/search`, MIDDLWARES, Routers.searchRouter)
 
 //catch all error
 app.use(ErrorMid);
 
-// createUser({
-//     name: "Tshepang",
-//     email: "tshepang.maila@ayoba.com",
-//     password: "my-password"
-// })
+createUser({
+    name: "Tshepang",
+    email: "tshepang.maila@ayoba.com",
+    password: "my-password"
+})
 
 
 const port = process.env.PORT || 2828;
