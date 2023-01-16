@@ -112,14 +112,14 @@ const TracksController = {
             const errors = validationResult(request);
             if (!errors.isEmpty()) throw new ValidationError("failed validations", {errors: errors.array()})
 
-            const track = TracksSingleton
+            const track = await TracksSingleton
                                        .getInstance()
                                        .deleteTrack(id)
-
+                                       
             if(!track) throw new Error("failed to delete track")
 
             response.status(200).json(
-                ApiResponse(false, "saved track successfully", {track: track})
+                ApiResponse(false, "deleted track successfully", {track: track})
             )
 
         } catch (e: any) {
