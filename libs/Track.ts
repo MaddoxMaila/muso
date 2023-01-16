@@ -1,7 +1,7 @@
 import { saveArtwork, saveAudio } from './MusoResourceUploader';
-import { LikedTracks, PrismaClient } from '@prisma/client';
+import { LikedTracks, Track, PrismaClient } from '@prisma/client';
 import DatabaseSingleton from "../prisma/DatabaseSingleton"
-import { Track } from './types'
+import { LikedTrack, TrackType, TrackWithLikedTrack } from './types'
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 
 
@@ -19,16 +19,30 @@ class Muso {
          *      userId: string - user id to specifically retrieve tracks added by specific users
          */
         try {
-
-            return await this.db.track.findMany({
+            
+            const tracks = await this.db.track.findMany({
                 where: {userId: userId},
                 include: {likedTracks: true},
             })
+
+            // data returned should have a field specifying if the track is Liked or not
+            let trackWithLiked: LikedTrack[] = []
+            tracks.forEach(track => {
+                const likedTrack = this.addLikedFieldToTrack(track)
+                if(!likedTrack) return
+                trackWithLiked.push(likedTrack)
+            })
+
+            return trackWithLiked
 
         } catch (e: any) {
             if(e instanceof PrismaClientValidationError) return null
         }
 
+    }
+
+    addLikedFieldToTrack(track: TrackWithLikedTrack){
+        return {...track, likedTracks: track?.likedTracks.length > 0}
     }
 
     async getTrack(trackId: string){
@@ -40,18 +54,23 @@ class Muso {
          */
         try {
 
-            return await this.db.track.findUnique({
+            const track =  await this.db.track.findUnique({
                 where: {
-                    id: trackId
-                }
+                    id: trackId,
+                },
+                include: {likedTracks: true}
             })
+
+            if(!track) return null
+
+            return this.addLikedFieldToTrack(track)
             
         } catch (e: any) {
             if(e instanceof PrismaClientValidationError) return null
         }
     }
 
-    async addTrack(track: Track){
+    async addTrack(track: TrackType){
         /**
          * @description
          * Add track to database and save. 
