@@ -2,7 +2,6 @@
     "compilerOptions": {
         "typeRoots": ["./@types/", "./node_modules/@types"],
         "sourceMap": true,
-        "target": "ES5",
         "outDir": "dist",
         "strict": true,
         "lib": [
