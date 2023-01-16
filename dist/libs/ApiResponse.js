@@ -10,12 +10,13 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 function ApiResponse(error, message, response) {
     if (response instanceof Error) {
+        // Only print Errors
         console.log(response);
     }
     return __assign({ error: error, message: message }, response);
 }
-exports.default = ApiResponse;
+exports["default"] = ApiResponse;
 //# sourceMappingURL=ApiResponse.js.map

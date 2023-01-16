@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var DatabaseSingleton_1 = __importDefault(require("./prisma/DatabaseSingleton"));
 var createUser = function (user) { return __awaiter(void 0, void 0, void 0, function () {
@@ -47,10 +47,10 @@ var createUser = function (user) { return __awaiter(void 0, void 0, void 0, func
         switch (_d.label) {
             case 0:
                 _d.trys.push([0, 5, , 6]);
-                db = DatabaseSingleton_1.default.getDb();
-                _b = (_a = bcryptjs_1.default).hash;
+                db = DatabaseSingleton_1["default"].getDb();
+                _b = (_a = bcryptjs_1["default"]).hash;
                 _c = [user.password];
-                return [4 /*yield*/, bcryptjs_1.default.genSalt(10)];
+                return [4 /*yield*/, bcryptjs_1["default"].genSalt(10)];
             case 1: return [4 /*yield*/, _b.apply(_a, _c.concat([_d.sent()]))
                 // Find duplicate
             ];
@@ -81,5 +81,5 @@ var createUser = function (user) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
-exports.default = createUser;
+exports["default"] = createUser;
 //# sourceMappingURL=createDummyUser.js.map

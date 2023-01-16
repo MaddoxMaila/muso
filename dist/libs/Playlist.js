@@ -38,12 +38,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var runtime_1 = require("@prisma/client/runtime");
 var DatabaseSingleton_1 = __importDefault(require("../prisma/DatabaseSingleton"));
 var Playlist = /** @class */ (function () {
     function Playlist() {
-        this.db = DatabaseSingleton_1.default.getDb();
+        this.db = DatabaseSingleton_1["default"].getDb();
     }
     Playlist.prototype.createPlaylist = function (playlist) {
         return __awaiter(this, void 0, void 0, function () {
@@ -87,15 +87,15 @@ var Playlist = /** @class */ (function () {
             });
         });
     };
-    Playlist.prototype.deletePlaylist = function (id) {
+    Playlist.prototype.deletePlaylist = function (playlistId) {
         return __awaiter(this, void 0, void 0, function () {
             var e_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.db.playlist.delete({
-                                where: { id: id }
+                        return [4 /*yield*/, this.db.playlist["delete"]({
+                                where: { id: playlistId }
                             })];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
@@ -178,5 +178,5 @@ var PlaylistSingleton = /** @class */ (function () {
     };
     return PlaylistSingleton;
 }());
-exports.default = PlaylistSingleton;
+exports["default"] = PlaylistSingleton;
 //# sourceMappingURL=Playlist.js.map

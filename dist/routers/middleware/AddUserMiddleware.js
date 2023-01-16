@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var ApiResponse_1 = __importDefault(require("../../libs/ApiResponse"));
 var DatabaseSingleton_1 = __importDefault(require("../../prisma/DatabaseSingleton"));
 var AddUserMiddleware = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
@@ -47,11 +47,11 @@ var AddUserMiddleware = function (req, res, next) { return __awaiter(void 0, voi
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                db = DatabaseSingleton_1.default.getDb();
+                db = DatabaseSingleton_1["default"].getDb();
                 return [4 /*yield*/, db.admin.findFirst()];
             case 1:
                 user = _a.sent();
-                if (!(user === null || user === void 0 ? void 0 : user.id))
+                if (!user)
                     throw new Error("Authorized user does not exist");
                 //set user in request
                 req.user = user;
@@ -59,11 +59,11 @@ var AddUserMiddleware = function (req, res, next) { return __awaiter(void 0, voi
                 return [3 /*break*/, 3];
             case 2:
                 e_1 = _a.sent();
-                res.status(401).json(ApiResponse_1.default(true, e_1.message, e_1));
+                res.status(401).json(ApiResponse_1["default"](true, e_1.message, e_1));
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); };
-exports.default = AddUserMiddleware;
+exports["default"] = AddUserMiddleware;
 //# sourceMappingURL=AddUserMiddleware.js.map

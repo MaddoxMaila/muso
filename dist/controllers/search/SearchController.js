@@ -42,36 +42,41 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var ApiResponse_1 = __importDefault(require("../libs/ApiResponse"));
-var DatabaseSingleton_1 = __importDefault(require("../prisma/DatabaseSingleton"));
-var db = DatabaseSingleton_1.default.getDb();
+exports.__esModule = true;
+var express_validator_1 = require("express-validator");
+var ApiResponse_1 = __importDefault(require("../../libs/ApiResponse"));
+var ValidationError_1 = __importDefault(require("../../libs/ValidationError"));
+var DatabaseSingleton_1 = __importDefault(require("../../prisma/DatabaseSingleton"));
+var db = DatabaseSingleton_1["default"].getDb();
 var SearchController = {
     search: function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-        var q, searchQuery, tracksSearch, playlistsSeach, e_1;
+        var q, errors, searchQuery, tracksSearch, playlistsSeach, e_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
                     q = request.query.q;
+                    errors = express_validator_1.validationResult(request);
+                    if (!errors.isEmpty())
+                        throw new ValidationError_1["default"]("failed validations", { errors: errors.array() });
                     searchQuery = "%" + q + "%";
-                    return [4 /*yield*/, db.$queryRaw(templateObject_1 || (templateObject_1 = __makeTemplateObject(["SELECT * FROM track WHERE  album LIKE ", ""], ["SELECT * FROM track WHERE  album LIKE ", ""])), searchQuery)];
+                    return [4 /*yield*/, db.$queryRaw(templateObject_1 || (templateObject_1 = __makeTemplateObject(["SELECT * FROM track WHERE  album LIKE ", " OR name LIKE ", " OR artist LIKE ", ""], ["SELECT * FROM track WHERE  album LIKE ", " OR name LIKE ", " OR artist LIKE ", ""])), searchQuery, searchQuery, searchQuery)];
                 case 1:
                     tracksSearch = _a.sent();
                     return [4 /*yield*/, db.$queryRaw(templateObject_2 || (templateObject_2 = __makeTemplateObject(["SELECT * from playlist WHERE name LIKE ", ""], ["SELECT * from playlist WHERE name LIKE ", ""])), searchQuery)];
                 case 2:
                     playlistsSeach = _a.sent();
-                    response.status(200).json(ApiResponse_1.default(false, "search results", { tracks: tracksSearch, playlist: playlistsSeach }));
+                    response.status(200).json(ApiResponse_1["default"](false, "search results", { tracks: tracksSearch, playlist: playlistsSeach }));
                     return [3 /*break*/, 4];
                 case 3:
                     e_1 = _a.sent();
-                    response.status(500).json(ApiResponse_1.default(true, e_1.message, e_1));
+                    response.status(500).json(ApiResponse_1["default"](true, e_1.message, e_1));
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
         });
     }); }
 };
-exports.default = SearchController;
+exports["default"] = SearchController;
 var templateObject_1, templateObject_2;
 //# sourceMappingURL=SearchController.js.map

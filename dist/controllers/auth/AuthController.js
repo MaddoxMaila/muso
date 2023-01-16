@@ -38,12 +38,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var ApiResponse_1 = __importDefault(require("../../libs/ApiResponse"));
 var Helper_1 = __importDefault(require("../../utils/Helper"));
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var DatabaseSingleton_1 = __importDefault(require("../../prisma/DatabaseSingleton"));
-var db = DatabaseSingleton_1.default.getDb();
+var db = DatabaseSingleton_1["default"].getDb();
 var AuthController = {
     /**
      * @description
@@ -67,9 +67,9 @@ var AuthController = {
                     if (password.length < 6) {
                         throw new Error("Password Length Should be More than 5 character.");
                     }
-                    _c = (_b = bcryptjs_1.default).hash;
+                    _c = (_b = bcryptjs_1["default"]).hash;
                     _d = [password];
-                    return [4 /*yield*/, bcryptjs_1.default.genSalt(10)];
+                    return [4 /*yield*/, bcryptjs_1["default"].genSalt(10)];
                 case 1: return [4 /*yield*/, _c.apply(_b, _d.concat([_e.sent()]))
                     //save on database
                 ];
@@ -96,14 +96,14 @@ var AuthController = {
                     ];
                 case 4:
                     user = _e.sent();
-                    token = Helper_1.default.getJWTtoken(user.id + "");
+                    token = Helper_1["default"].getJWTtoken(user.id + "");
                     //, token-if you want you can pass the token
-                    res.status(200).json(ApiResponse_1.default(false, "user created successfully", { user: user, token: token }));
+                    res.status(200).json(ApiResponse_1["default"](false, "user created successfully", { user: user, token: token }));
                     return [3 /*break*/, 6];
                 case 5:
                     e_1 = _e.sent();
                     console.log("auth sign up: ", e_1);
-                    response = ApiResponse_1.default(true, e_1.message, e_1);
+                    response = ApiResponse_1["default"](true, e_1.message, e_1);
                     res.json(response);
                     return [3 /*break*/, 6];
                 case 6: return [2 /*return*/];
@@ -132,20 +132,20 @@ var AuthController = {
                         throw new Error("No User Found with this email!");
                     }
                     user = u;
-                    return [4 /*yield*/, bcryptjs_1.default.compare(password, user.password)];
+                    return [4 /*yield*/, bcryptjs_1["default"].compare(password, user.password)];
                 case 2:
                     ckPass = _b.sent();
                     if (!ckPass) {
                         throw new Error("Wrong email or password");
                     }
-                    token = Helper_1.default.getJWTtoken(user.id + "");
+                    token = Helper_1["default"].getJWTtoken(user.id + "");
                     //, token-if you want you can pass the token
-                    res.status(200).json(ApiResponse_1.default(false, "user logged in successfully", { token: token, user: user }));
+                    res.status(200).json(ApiResponse_1["default"](false, "user logged in successfully", { token: token, user: user }));
                     return [3 /*break*/, 4];
                 case 3:
                     e_2 = _b.sent();
                     console.log("auth login: ", e_2);
-                    response = ApiResponse_1.default(true, e_2.message, e_2);
+                    response = ApiResponse_1["default"](true, e_2.message, e_2);
                     res.json(response);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
@@ -153,5 +153,5 @@ var AuthController = {
         });
     }); }
 };
-exports.default = AuthController;
+exports["default"] = AuthController;
 //# sourceMappingURL=AuthController.js.map
