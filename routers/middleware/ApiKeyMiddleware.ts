@@ -3,7 +3,10 @@ import ApiResponse from '../../libs/ApiResponse'
 import Helper from '../../utils/Helper'
 
 const ApiKeyMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-
+    /**
+     * @description
+     * Middleware to Verify and make sure that all incoming requests have an API Key present.
+     */
     try {
 
         const headers = req.headers

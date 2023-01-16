@@ -10,6 +10,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["referentialActions"]
 }
 
 // all models
@@ -43,7 +44,7 @@ model Track {
   likedTracks       LikedTracks[]
 
   userId      String
-  user        Admin     @relation(fields: [userId], references: [id])
+  user        Admin     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("track")
 }
@@ -56,7 +57,7 @@ model Playlist {
   playlistTracks    PlaylistTracks[]
 
   userId      String
-  user        Admin     @relation(fields: [userId], references: [id])
+  user        Admin     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("playlist")
 }
@@ -66,10 +67,10 @@ model PlaylistTracks {
   created_at  DateTime  @default(now())
 
   trackId     String
-  Track       Track     @relation(fields: [trackId], references: [id])
+  Track       Track     @relation(fields: [trackId], references: [id], onDelete: Cascade)
 
   playlistId  String
-  Playlist    Playlist  @relation(fields: [playlistId], references: [id])
+  Playlist    Playlist  @relation(fields: [playlistId], references: [id], onDelete: Cascade)
 
   @@map("playlist_track")
 }
@@ -79,8 +80,8 @@ model LikedTracks {
   trackUserId String    @unique
 
   trackId     String
-  Track       Track     @relation(fields: [trackId], references: [id])
+  Track       Track     @relation(fields: [trackId], references: [id], onDelete: Cascade)
 
   userId      String
-  user        Admin     @relation(fields: [userId], references: [id])
+  user        Admin     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

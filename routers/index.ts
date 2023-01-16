@@ -1,7 +1,7 @@
-import authRouter from './authRouter'
-import tracksRouter from './tracksRouter'
-import playlistRouter from './playlistRouter'
-import searchRouter from './searchRouter'
+import authRouter from './routes/authRouter'
+import tracksRouter from './routes/tracksRouter'
+import playlistRouter from './routes/playlistRouter'
+import searchRouter from './routes/searchRouter'
 
 const Routers = {
     authRouter,

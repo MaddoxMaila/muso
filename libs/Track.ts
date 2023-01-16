@@ -1,7 +1,7 @@
 import { saveArtwork, saveAudio } from './MusoResourceUploader';
-import { LikedTracks, PrismaClient } from '@prisma/client';
+import { LikedTracks, Track, PrismaClient } from '@prisma/client';
 import DatabaseSingleton from "../prisma/DatabaseSingleton"
-import { Track } from './types'
+import { LikedTrack, TrackType, TrackWithLikedTrack } from './types'
 import { PrismaClientValidationError } from '@prisma/client/runtime';
 
 
@@ -13,14 +13,27 @@ class Muso {
     
     async getAllTracks(userId: string){
         /**
+         * @description
          * Get All tracks, if there are no tracks an empty array will be returned
+         * @param
+         *      userId: string - user id to specifically retrieve tracks added by specific users
          */
         try {
-
-            return await this.db.track.findMany({
+            
+            const tracks = await this.db.track.findMany({
                 where: {userId: userId},
                 include: {likedTracks: true},
             })
+
+            // data returned should have a field specifying if the track is Liked or not
+            let trackWithLiked: LikedTrack[] = []
+            tracks.forEach(track => {
+                const likedTrack = this.addLikedFieldToTrack(track)
+                if(!likedTrack) return
+                trackWithLiked.push(likedTrack)
+            })
+
+            return trackWithLiked
 
         } catch (e: any) {
             if(e instanceof PrismaClientValidationError) return null
@@ -28,28 +41,43 @@ class Muso {
 
     }
 
-    async getTrack(id: string){
+    addLikedFieldToTrack(track: TrackWithLikedTrack){
+        return {...track, likedTracks: track?.likedTracks.length > 0}
+    }
+
+    async getTrack(trackId: string){
         /**
-         * Get a track based on the UUID of that track
+         * @description
+         * Get a track based on the track id of that track
+         * @param
+         *      trackId: string - track id to identify which track to get
          */
         try {
 
-            return await this.db.track.findUnique({
+            const track =  await this.db.track.findUnique({
                 where: {
-                    id: id
-                }
+                    id: trackId,
+                },
+                include: {likedTracks: true}
             })
+
+            if(!track) return null
+
+            return this.addLikedFieldToTrack(track)
             
         } catch (e: any) {
             if(e instanceof PrismaClientValidationError) return null
         }
     }
 
-    async addTrack(track: Track){
+    async addTrack(track: TrackType){
         /**
-         * Add track to database and save
+         * @description
+         * Add track to database and save. 
+         * Process uploaded audio & artwork files
+         * @param
+         *      track: Track - data of the track that should be added
          */
-
         try {
 
             if(
@@ -75,16 +103,18 @@ class Muso {
         }
     }
 
-    async deleteTrack(id: string){
+    async deleteTrack(trackId: string){
         /**
-         * Delete track
+         * @description
+         * Delete track using the track id
+         * @param
+         *      trackId: string - id of the track that should be deleted
          */
-
         try {
             
             return await this.db.track.delete({
                 where: {
-                    id: id
+                    id: trackId
                 }
             })
 
@@ -94,13 +124,21 @@ class Muso {
     }
 
     async likeOrUnlikeTrack(like: {trackId: string, userId: string}){
+        /**
+         * @description
+         * Adding/ Removing a like from a track.
+         * Check if user hasn't liked, Add like else remove like.
+         * @param
+         *      like: {trackId: string, userId: string} - track id of the track being liked and user id of the user liking the track
+         */
         try {
 
             let likeTrack: LikedTracks | null = null
             let liked: boolean = false
 
+            // Check for like
             if(
-                await this.db.likedTracks.count({where: {id: like.trackId}}) === 0
+                await this.db.likedTracks.count({where: {trackUserId: `${like.trackId}-${like.userId}`}}) === 0
             ){
 
                 // Like the track
@@ -127,6 +165,12 @@ class Muso {
     }
 
     async getLikedTracks(userId: string){
+        /**
+         * @description
+         * retrieve only songs that where liked
+         * @param
+         *      userId: string - user id used to get users liked tracks
+         */
         try{
 
             return await this.db.likedTracks.findMany({
@@ -140,20 +184,20 @@ class Muso {
     }
 }
 
-class MusoSingleton {
+class TracksSingleton {
     
     static muso: Muso
 
     constructor(){
-        MusoSingleton.muso = new Muso()
+        TracksSingleton.muso = new Muso()
     }
 
-    static getMuso(){
-        if(!MusoSingleton.muso)
-            new MusoSingleton()
-        return MusoSingleton.muso
+    static getInstance(){
+        if(!TracksSingleton.muso)
+            new TracksSingleton()
+        return TracksSingleton.muso
     }
 
 }
 
-export default MusoSingleton
+export default TracksSingleton

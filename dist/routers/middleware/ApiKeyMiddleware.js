@@ -38,28 +38,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var ApiResponse_1 = __importDefault(require("../../libs/ApiResponse"));
 var Helper_1 = __importDefault(require("../../utils/Helper"));
 var ApiKeyMiddleware = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var headers, apiKey, api;
     return __generator(this, function (_a) {
+        /**
+         * @description
+         * Middleware to Verify and make sure that all incoming requests have an API Key present.
+         */
         try {
             headers = req.headers;
             // check for access-key in header
             if (!headers['x-api-key'])
                 throw new Error("Missing Access Key");
             apiKey = headers['x-api-key'].toString();
-            api = Helper_1.default.verifyApiKey(apiKey);
+            api = Helper_1["default"].verifyApiKey(apiKey);
             if (!api)
                 throw new Error("Invalid Access key");
             next();
         }
         catch (e) {
-            res.status(401).json(ApiResponse_1.default(true, e.message, e));
+            res.status(401).json(ApiResponse_1["default"](true, e.message, e));
         }
         return [2 /*return*/];
     });
 }); };
-exports.default = ApiKeyMiddleware;
+exports["default"] = ApiKeyMiddleware;
 //# sourceMappingURL=ApiKeyMiddleware.js.map

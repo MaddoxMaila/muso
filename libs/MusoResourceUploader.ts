@@ -12,7 +12,12 @@ const newFileName = (fileName: string): string => {
 let PATH: string = ""
 
 export const saveArtwork = async (artworkFile: fileUpload.UploadedFile) => {
-
+    /**
+     * @description
+     * Move artwork file and then create a url for the file in the server
+     * @param
+     *      artworkFile: UploadedFile - file to be moved in the server
+     */
     artworkFile.name = newFileName(artworkFile.name)
 
     PATH = process.env.ARTWORK_PATH || './public/artwork'
@@ -26,7 +31,12 @@ export const saveArtwork = async (artworkFile: fileUpload.UploadedFile) => {
 }
 
 export const saveAudio = async (audioFile: fileUpload.UploadedFile) => {
-    
+    /**
+     * @description
+     * Move audio file and then create a url for the file in the server
+     * @param
+     *      audioFile: UploadedFile - file to be moved in the server
+     */
     audioFile.name = newFileName(audioFile.name)
 
     PATH = process.env.AUDIO_PATH || './public/audios'

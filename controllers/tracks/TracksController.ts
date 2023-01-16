@@ -1,21 +1,27 @@
 import { Response, Request } from "express";
+import { validationResult } from "express-validator";
 import ApiResponse from "../../libs/ApiResponse";
-import MusoSingleton from "../../libs/Muso";
+import TracksSingleton from "../../libs/Track";
+import ValidationError from "../../libs/ValidationError";
 import DatabaseSingleton from "../../prisma/DatabaseSingleton";
 
 const db = DatabaseSingleton.getDb()
 
 const TracksController = {
     getTrack: async (request: Request, response: Response) => {
+        /**
+         * @description
+         * Get track of the from the specified id
+         */
         try{
 
-            /**
-             * Validation is done on the route definition
-             */
-            const { id } = request.params
+            const { id }= request.params
+
+            const errors = validationResult(request);
+            if (!errors.isEmpty()) throw new ValidationError("failed validations", {errors: errors.array()})
             
-            const track = await MusoSingleton
-                                            .getMuso()
+            const track = await TracksSingleton
+                                            .getInstance()
                                             .getTrack(id)
 
             if(!track) throw new Error("could not find the specified song.")
@@ -31,11 +37,14 @@ const TracksController = {
         }
     },
     getAllTracks: async (request: Request, response: Response) => {
-
+        /**
+         * @description
+         * Get all tracks that where added by specific user
+         */
         try{
-
-            const tracks = await MusoSingleton
-                                              .getMuso()
+            
+            const tracks = await TracksSingleton
+                                              .getInstance()
                                               .getAllTracks(request.user?.id)
 
             if(!tracks) throw new Error("failed to retrieve all tracks")
@@ -52,7 +61,10 @@ const TracksController = {
 
     },
     addTrack: async (request: Request, response: Response) => {
-
+        /**
+         * @description
+         * Add track including its artwork & audio files
+         */
         try{
 
             const { 
@@ -66,8 +78,14 @@ const TracksController = {
              const audio  = request.files?.audio
              const artwork = request.files?.artwork
 
-             const track = await MusoSingleton
-                                              .getMuso()
+             if(!audio) throw new Error("Missing audio file")
+             if(!artwork) throw new Error("Missing artwork file")
+
+             const errors = validationResult(request);
+             if (!errors.isEmpty()) throw new ValidationError("failed validations", {errors: errors.array()})
+
+             const track = await TracksSingleton
+                                              .getInstance()
                                               .addTrack({name, album, artist, duration: parseInt(duration), year: parseInt(year), audio, artwork, userId: request.user?.id})
 
              if(!track) throw new Error("failed to add track")
@@ -83,19 +101,25 @@ const TracksController = {
         }   
     },
     deleteTrack: async (request: Request, response: Response) => {
-
+        /**
+         * @description
+         * delete track of the specified id
+         */
         try {
             
             const { id } = request.params
 
-            const track = MusoSingleton
-                                       .getMuso()
-                                       .deleteTrack(id)
+            const errors = validationResult(request);
+            if (!errors.isEmpty()) throw new ValidationError("failed validations", {errors: errors.array()})
 
+            const track = await TracksSingleton
+                                       .getInstance()
+                                       .deleteTrack(id)
+                                       
             if(!track) throw new Error("failed to delete track")
 
             response.status(200).json(
-                ApiResponse(false, "saved track successfully", {track: track})
+                ApiResponse(false, "deleted track successfully", {track: track})
             )
 
         } catch (e: any) {
@@ -106,13 +130,19 @@ const TracksController = {
 
     },
     likeTrack: async (request: Request, response: Response) => {
-
+        /**
+         * @description
+         * Add a like to a track
+         */
         try{
 
             const { id } = request.params
 
-            const like = await MusoSingleton
-                                     .getMuso()
+            const errors = validationResult(request);
+            if (!errors.isEmpty()) throw new ValidationError("failed validations", {errors: errors.array()})
+
+            const like = await TracksSingleton
+                                     .getInstance()
                                      .likeOrUnlikeTrack({trackId: id, userId: request.user?.id})
 
             if(!like) throw new Error("Failed to like track")
@@ -128,11 +158,14 @@ const TracksController = {
         }
     },
     getLikedTracks: async (request: Request, response: Response) => {
-        
+        /**
+         * @description
+         * Get all tracks that are liked a user
+         */
         try {
 
-            const likedTracks = await MusoSingleton
-                                                  .getMuso()
+            const likedTracks = await TracksSingleton
+                                                  .getInstance()
                                                   .getLikedTracks(request.user?.id)
             
             if(!likedTracks) throw new Error("Failed to compile liked tracks.")

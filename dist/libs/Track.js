@@ -49,13 +49,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var MusoResourceUploader_1 = require("./MusoResourceUploader");
 var DatabaseSingleton_1 = __importDefault(require("../prisma/DatabaseSingleton"));
 var runtime_1 = require("@prisma/client/runtime");
 var Muso = /** @class */ (function () {
     function Muso() {
-        this.db = DatabaseSingleton_1.default.getDb();
+        this.db = DatabaseSingleton_1["default"].getDb();
     }
     Muso.prototype.getAllTracks = function (userId) {
         return __awaiter(this, void 0, void 0, function () {
@@ -66,7 +66,7 @@ var Muso = /** @class */ (function () {
                         _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, this.db.track.findMany({
                                 where: { userId: userId },
-                                include: { likedTracks: true },
+                                include: { likedTracks: true }
                             })];
                     case 1: return [2 /*return*/, _a.sent()];
                     case 2:
@@ -79,7 +79,7 @@ var Muso = /** @class */ (function () {
             });
         });
     };
-    Muso.prototype.getTrack = function (id) {
+    Muso.prototype.getTrack = function (trackId) {
         return __awaiter(this, void 0, void 0, function () {
             var e_2;
             return __generator(this, function (_a) {
@@ -88,7 +88,7 @@ var Muso = /** @class */ (function () {
                         _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, this.db.track.findUnique({
                                 where: {
-                                    id: id
+                                    id: trackId
                                 }
                             })];
                     case 1: return [2 /*return*/, _a.sent()];
@@ -133,16 +133,16 @@ var Muso = /** @class */ (function () {
             });
         });
     };
-    Muso.prototype.deleteTrack = function (id) {
+    Muso.prototype.deleteTrack = function (trackId) {
         return __awaiter(this, void 0, void 0, function () {
             var e_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, this.db.track.delete({
+                        return [4 /*yield*/, this.db.track["delete"]({
                                 where: {
-                                    id: id
+                                    id: trackId
                                 }
                             })];
                     case 1: return [2 /*return*/, _a.sent()];
@@ -165,7 +165,7 @@ var Muso = /** @class */ (function () {
                         _a.trys.push([0, 6, , 7]);
                         likeTrack = null;
                         liked = false;
-                        return [4 /*yield*/, this.db.likedTracks.count({ where: { id: like.trackId } })];
+                        return [4 /*yield*/, this.db.likedTracks.count({ where: { trackUserId: like.trackId + "-" + like.userId } })];
                     case 1:
                         if (!((_a.sent()) === 0)) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.db.likedTracks.create({
@@ -176,7 +176,7 @@ var Muso = /** @class */ (function () {
                         likeTrack = _a.sent();
                         liked = true;
                         return [3 /*break*/, 5];
-                    case 3: return [4 /*yield*/, this.db.likedTracks.delete({
+                    case 3: return [4 /*yield*/, this.db.likedTracks["delete"]({
                             where: { trackUserId: like.trackId + "-" + like.userId }
                         })];
                     case 4:
@@ -219,16 +219,16 @@ var Muso = /** @class */ (function () {
     };
     return Muso;
 }());
-var MusoSingleton = /** @class */ (function () {
-    function MusoSingleton() {
-        MusoSingleton.muso = new Muso();
+var TracksSingleton = /** @class */ (function () {
+    function TracksSingleton() {
+        TracksSingleton.muso = new Muso();
     }
-    MusoSingleton.getMuso = function () {
-        if (!MusoSingleton.muso)
-            new MusoSingleton();
-        return MusoSingleton.muso;
+    TracksSingleton.getInstance = function () {
+        if (!TracksSingleton.muso)
+            new TracksSingleton();
+        return TracksSingleton.muso;
     };
-    return MusoSingleton;
+    return TracksSingleton;
 }());
-exports.default = MusoSingleton;
-//# sourceMappingURL=Muso.js.map
+exports["default"] = TracksSingleton;
+//# sourceMappingURL=Track.js.map

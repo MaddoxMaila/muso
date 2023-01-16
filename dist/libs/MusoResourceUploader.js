@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.saveAudio = exports.saveArtwork = void 0;
 var crypto_1 = require("crypto");
 var newFileName = function (fileName) {
@@ -46,6 +46,12 @@ var newFileName = function (fileName) {
 var PATH = "";
 var saveArtwork = function (artworkFile) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
+        /**
+         * @description
+         * Move artwork file and then create a url for the file in the server
+         * @param
+         *      artworkFile: UploadedFile - file to be moved in the server
+         */
         artworkFile.name = newFileName(artworkFile.name);
         PATH = process.env.ARTWORK_PATH || './public/artwork';
         artworkFile.mv(PATH + "/" + artworkFile.name, function (error) {
@@ -58,6 +64,12 @@ var saveArtwork = function (artworkFile) { return __awaiter(void 0, void 0, void
 exports.saveArtwork = saveArtwork;
 var saveAudio = function (audioFile) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
+        /**
+         * @description
+         * Move audio file and then create a url for the file in the server
+         * @param
+         *      audioFile: UploadedFile - file to be moved in the server
+         */
         audioFile.name = newFileName(audioFile.name);
         PATH = process.env.AUDIO_PATH || './public/audios';
         audioFile.mv(PATH + "/" + audioFile.name, function (error) {

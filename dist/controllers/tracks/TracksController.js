@@ -38,31 +38,36 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
+var express_validator_1 = require("express-validator");
 var ApiResponse_1 = __importDefault(require("../../libs/ApiResponse"));
-var Muso_1 = __importDefault(require("../../libs/Muso"));
+var Track_1 = __importDefault(require("../../libs/Track"));
+var ValidationError_1 = __importDefault(require("../../libs/ValidationError"));
 var DatabaseSingleton_1 = __importDefault(require("../../prisma/DatabaseSingleton"));
-var db = DatabaseSingleton_1.default.getDb();
+var db = DatabaseSingleton_1["default"].getDb();
 var TracksController = {
     getTrack: function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-        var id, track, e_1;
+        var id, errors, track, e_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     id = request.params.id;
-                    return [4 /*yield*/, Muso_1.default
-                            .getMuso()
+                    errors = express_validator_1.validationResult(request);
+                    if (!errors.isEmpty())
+                        throw new ValidationError_1["default"]("failed validations", { errors: errors.array() });
+                    return [4 /*yield*/, Track_1["default"]
+                            .getInstance()
                             .getTrack(id)];
                 case 1:
                     track = _a.sent();
                     if (!track)
                         throw new Error("could not find the specified song.");
-                    response.status(200).json(ApiResponse_1.default(false, "song found!", { track: track }));
+                    response.status(200).json(ApiResponse_1["default"](false, "song found!", { track: track }));
                     return [3 /*break*/, 3];
                 case 2:
                     e_1 = _a.sent();
-                    response.status(500).json(ApiResponse_1.default(true, e_1.message, e_1));
+                    response.status(500).json(ApiResponse_1["default"](true, e_1.message, e_1));
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -75,25 +80,25 @@ var TracksController = {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, Muso_1.default
-                            .getMuso()
+                    return [4 /*yield*/, Track_1["default"]
+                            .getInstance()
                             .getAllTracks((_a = request.user) === null || _a === void 0 ? void 0 : _a.id)];
                 case 1:
                     tracks = _b.sent();
                     if (!tracks)
                         throw new Error("failed to retrieve all tracks");
-                    response.status(200).json(ApiResponse_1.default(true, tracks.length > 0 ? "songs found" : "could not find any songs, please add songs!.", { tracks: tracks }));
+                    response.status(200).json(ApiResponse_1["default"](true, tracks.length > 0 ? "songs found" : "could not find any songs, please add songs!.", { tracks: tracks }));
                     return [3 /*break*/, 3];
                 case 2:
                     e_2 = _b.sent();
-                    response.status(500).json(ApiResponse_1.default(true, e_2.message, e_2));
+                    response.status(500).json(ApiResponse_1["default"](true, e_2.message, e_2));
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
         });
     }); },
     addTrack: function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-        var _a, name, album, artist, duration, year, audio, artwork, track, e_3;
+        var _a, name, album, artist, duration, year, audio, artwork, errors, track, e_3;
         var _b, _c, _d;
         return __generator(this, function (_e) {
             switch (_e.label) {
@@ -102,61 +107,78 @@ var TracksController = {
                     _a = request.body, name = _a.name, album = _a.album, artist = _a.artist, duration = _a.duration, year = _a.year;
                     audio = (_b = request.files) === null || _b === void 0 ? void 0 : _b.audio;
                     artwork = (_c = request.files) === null || _c === void 0 ? void 0 : _c.artwork;
-                    return [4 /*yield*/, Muso_1.default
-                            .getMuso()
+                    if (!audio)
+                        throw new Error("Missing audio file");
+                    if (!artwork)
+                        throw new Error("Missing artwork file");
+                    errors = express_validator_1.validationResult(request);
+                    if (!errors.isEmpty())
+                        throw new ValidationError_1["default"]("failed validations", { errors: errors.array() });
+                    return [4 /*yield*/, Track_1["default"]
+                            .getInstance()
                             .addTrack({ name: name, album: album, artist: artist, duration: parseInt(duration), year: parseInt(year), audio: audio, artwork: artwork, userId: (_d = request.user) === null || _d === void 0 ? void 0 : _d.id })];
                 case 1:
                     track = _e.sent();
                     if (!track)
                         throw new Error("failed to add track");
-                    response.status(200).json(ApiResponse_1.default(false, "saved track successfully", { track: track }));
+                    response.status(200).json(ApiResponse_1["default"](false, "saved track successfully", { track: track }));
                     return [3 /*break*/, 3];
                 case 2:
                     e_3 = _e.sent();
-                    response.status(500).json(ApiResponse_1.default(true, e_3.message, e_3));
+                    response.status(500).json(ApiResponse_1["default"](true, e_3.message, e_3));
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
         });
     }); },
     deleteTrack: function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-        var id, track;
+        var id, errors, track;
         return __generator(this, function (_a) {
+            /**
+             * @description
+             * delete track of the specified id
+             */
             try {
                 id = request.params.id;
-                track = Muso_1.default
-                    .getMuso()
+                errors = express_validator_1.validationResult(request);
+                if (!errors.isEmpty())
+                    throw new ValidationError_1["default"]("failed validations", { errors: errors.array() });
+                track = Track_1["default"]
+                    .getInstance()
                     .deleteTrack(id);
                 if (!track)
                     throw new Error("failed to delete track");
-                response.status(200).json(ApiResponse_1.default(false, "saved track successfully", { track: track }));
+                response.status(200).json(ApiResponse_1["default"](false, "saved track successfully", { track: track }));
             }
             catch (e) {
-                response.status(500).json(ApiResponse_1.default(true, e.message, e));
+                response.status(500).json(ApiResponse_1["default"](true, e.message, e));
             }
             return [2 /*return*/];
         });
     }); },
     likeTrack: function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-        var id, like, e_4;
+        var id, errors, like, e_4;
         var _a;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
                     id = request.params.id;
-                    return [4 /*yield*/, Muso_1.default
-                            .getMuso()
+                    errors = express_validator_1.validationResult(request);
+                    if (!errors.isEmpty())
+                        throw new ValidationError_1["default"]("failed validations", { errors: errors.array() });
+                    return [4 /*yield*/, Track_1["default"]
+                            .getInstance()
                             .likeOrUnlikeTrack({ trackId: id, userId: (_a = request.user) === null || _a === void 0 ? void 0 : _a.id })];
                 case 1:
                     like = _b.sent();
                     if (!like)
                         throw new Error("Failed to like track");
-                    response.status(200).json(ApiResponse_1.default(false, (like.liked ? 'Liked' : 'Unliked') + " track", { track: like }));
+                    response.status(200).json(ApiResponse_1["default"](false, (like.liked ? 'Liked' : 'Unliked') + " track", { track: like }));
                     return [3 /*break*/, 3];
                 case 2:
                     e_4 = _b.sent();
-                    response.status(500).json(ApiResponse_1.default(true, e_4.message, e_4));
+                    response.status(500).json(ApiResponse_1["default"](true, e_4.message, e_4));
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -169,18 +191,18 @@ var TracksController = {
             switch (_b.label) {
                 case 0:
                     _b.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, Muso_1.default
-                            .getMuso()
+                    return [4 /*yield*/, Track_1["default"]
+                            .getInstance()
                             .getLikedTracks((_a = request.user) === null || _a === void 0 ? void 0 : _a.id)];
                 case 1:
                     likedTracks = _b.sent();
                     if (!likedTracks)
                         throw new Error("Failed to compile liked tracks.");
-                    response.status(200).json(ApiResponse_1.default(false, likedTracks.length > 0 ? "Tracks you have liked" : "No liked tracks found", { tracks: likedTracks, user: request.user }));
+                    response.status(200).json(ApiResponse_1["default"](false, likedTracks.length > 0 ? "Tracks you have liked" : "No liked tracks found", { tracks: likedTracks, user: request.user }));
                     return [3 /*break*/, 3];
                 case 2:
                     e_5 = _b.sent();
-                    response.status(500).json(ApiResponse_1.default(true, e_5.message, e_5));
+                    response.status(500).json(ApiResponse_1["default"](true, e_5.message, e_5));
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -192,5 +214,5 @@ var TracksController = {
         });
     }); }
 };
-exports.default = TracksController;
+exports["default"] = TracksController;
 //# sourceMappingURL=TracksController.js.map
