@@ -8,11 +8,12 @@ RUN npm install
 
 COPY . .
 
+RUN npm run p-mg
+
 RUN npm run build
 
 # Run prisma migrations
-RUN npm run p-mg
 
-EXPOSE 3000
+EXPOSE 2828
 
-CMD ["node", "build/index.js"]
+CMD ["node", "dist/server.js"]

@@ -1,0 +1,35 @@
+version: '3'
+services:
+  # db:
+  #   image: postgres:latest
+  #   container_name: db
+  #   restart: always
+  #   env_file:
+  #     - .env
+  #   networks:
+  #     - net
+  #   environment:
+  #     POSTGRES_USER: ${DB_USER}
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD}
+  #     POSTGRES_DB: ${DB_NAME}
+  #   ports:
+  #     - "5432:5432"
+  
+  app:
+    # depends_on:
+    #   - db
+    build:
+      context: .
+      dockerfile: app.Dockerfile 
+    container_name: muso_api
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    networks:
+      - net
+    ports:
+      - "2828:2828"
+
+networks:
+  net:
