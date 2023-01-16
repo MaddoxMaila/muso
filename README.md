@@ -1,25 +1,22 @@
 # Muso API
 
-Set up API using Node, Express,Prisma (PostgreSQL) , JWT and bcrypt.
-___ 
-
 ## Tech Stack
- * NODE JS 
+ * NodeJS 
  * TypeScript
- * Express JS
- * Prisma(PostgreSQL)
- * JWT+Http Only Cookie+bcryptJS(Auth)
+ * ExpressJS
+ * Prisma with PostgreSQL
 
 ___
 ```javascript
 /**
  * @design Tshepang Maila
+ * @implementation Tshepang Maila
  */
 ```
 
 ## Deployments
 
->> scripts in package.json
+ scripts in package.json
 ```json
 "scripts": {
     "build": "rm -r dist/* &&  tsc",
@@ -47,20 +44,24 @@ $ docker-compose up --build
 
 ### 2 Build & Run Server
 
-- To migrate prisma db schemas & generate db objects
-```
-$ npm run p-mg
-```
+- Install node packages
+  ```
+  $ npm install
+  ```
+- To migrate prisma db schemas to PostgreSQL & generate db objects
+  ```
+  $ npm run p-mg
+  ```
 
-- Build typescipt 
-```
-$ npm run build
-```
+- Build typescipt project
+  ```
+  $ npm run build
+  ```
 
 - If everything worked perfect, Run server
-```
-$ npm run start
-```
+  ```
+  $ npm run start
+  ```
 
 ## Test API with Postman
 
