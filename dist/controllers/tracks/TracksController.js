@@ -164,22 +164,22 @@ var TracksController = {
     }); },
     getLikedTracks: function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
         var likedTracks, e_5;
-        var _a, _b;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
+        var _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _c.trys.push([0, 2, , 3]);
+                    _b.trys.push([0, 2, , 3]);
                     return [4 /*yield*/, Muso_1.default
                             .getMuso()
                             .getLikedTracks((_a = request.user) === null || _a === void 0 ? void 0 : _a.id)];
                 case 1:
-                    likedTracks = _c.sent();
+                    likedTracks = _b.sent();
                     if (!likedTracks)
                         throw new Error("Failed to compile liked tracks.");
-                    response.status(200).json(ApiResponse_1.default(false, likedTracks.length > 0 ? "Tracks you have liked" : "No liked tracks found", { tracks: likedTracks, user: (_b = request.user) === null || _b === void 0 ? void 0 : _b.id }));
+                    response.status(200).json(ApiResponse_1.default(false, likedTracks.length > 0 ? "Tracks you have liked" : "No liked tracks found", { tracks: likedTracks, user: request.user }));
                     return [3 /*break*/, 3];
                 case 2:
-                    e_5 = _c.sent();
+                    e_5 = _b.sent();
                     response.status(500).json(ApiResponse_1.default(true, e_5.message, e_5));
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];

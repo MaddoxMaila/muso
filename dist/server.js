@@ -39,6 +39,7 @@ app.get("" + BASE_URL, function (_, res) { return res.send("Running... 🚀"); }
 app.use(BASE_URL + "/auth", ApiKeyMiddleware_1.default, index_1.default.authRouter);
 app.use(BASE_URL + "/tracks", MIDDLWARES, index_1.default.tracksRouter);
 app.use(BASE_URL + "/playlists", MIDDLWARES, index_1.default.playlistRouter);
+app.use(BASE_URL + "/search", MIDDLWARES, index_1.default.searchRouter);
 //catch all error
 app.use(ErrorMid_1.default);
 createDummyUser_1.default({

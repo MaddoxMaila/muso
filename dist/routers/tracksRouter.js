@@ -12,6 +12,16 @@ var router = express_1.Router();
  */
 router.get("/all", TracksController_1.default.getAllTracks);
 /**
+ * @description 5. get all liked tracks
+ * @endpoint http://localhost:2828/api/v1/tracks/liked
+ */
+router.get("/liked", TracksController_1.default.getLikedTracks);
+/**
+ * @description 6. shuffle list of tracks
+ * @endpoint http://localhost:2828/api/v1/tracks/shuffle
+ */
+router.get("/shuffle", TracksController_1.default.shuffleTracks);
+/**
  * @description 2. get specified track
  * @endpoint http://localhost:2828/api/v1/tracks/:id
  */
@@ -32,10 +42,5 @@ router.delete("/delete/:id", TracksController_1.default.deleteTrack);
  * @endpoint http://localhost:2828/api/v1/tracks/like/:id
  */
 router.get("/like/:id", TracksController_1.default.likeTrack);
-/**
- * @description 6. shuffle list of tracks
- * @endpoint http://localhost:2828/api/v1/tracks/shuffle
- */
-router.get("/shuffle", TracksController_1.default.shuffleTracks);
 exports.default = router;
 //# sourceMappingURL=tracksRouter.js.map

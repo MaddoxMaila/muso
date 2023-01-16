@@ -108,10 +108,54 @@ var Playlist = /** @class */ (function () {
             });
         });
     };
-    Playlist.prototype.deletePlaylistTrack = function (id) {
+    Playlist.prototype.getPlaylists = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var e_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.db.playlist.findMany({
+                                where: { userId: userId }
+                            })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                    case 2:
+                        e_4 = _a.sent();
+                        if (e_4 instanceof runtime_1.PrismaClientValidationError)
+                            return [2 /*return*/, null];
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Playlist.prototype.getPlaylistTracks = function (ids) {
+        return __awaiter(this, void 0, void 0, function () {
+            var e_5;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.db.playlist.findFirst({
+                                where: { id: ids.playlistId, userId: ids.userId },
+                                include: { playlistTracks: true }
+                            })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                    case 2:
+                        e_5 = _a.sent();
+                        if (e_5 instanceof runtime_1.PrismaClientValidationError)
+                            return [2 /*return*/, null];
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    Playlist.prototype.deletePlaylistTrack = function (ids) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 try {
+                    // To Implement!
                 }
                 catch (e) {
                     if (e instanceof runtime_1.PrismaClientValidationError)

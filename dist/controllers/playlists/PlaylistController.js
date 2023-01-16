@@ -44,8 +44,55 @@ var Playlist_1 = __importDefault(require("../../libs/Playlist"));
 var DatabaseSingleton_1 = __importDefault(require("../../prisma/DatabaseSingleton"));
 var db = DatabaseSingleton_1.default.getDb();
 var PlaylistController = {
+    getPlaylists: function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
+        var playlists, e_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, Playlist_1.default
+                            .playlistInstance()
+                            .getPlaylists(request.user.id)];
+                case 1:
+                    playlists = _a.sent();
+                    if (!playlists)
+                        throw new Error("failed to retrieve playlists");
+                    response.status(200).json(ApiResponse_1.default(false, "playlists compiled", { playlists: playlists }));
+                    return [3 /*break*/, 3];
+                case 2:
+                    e_1 = _a.sent();
+                    response.status(500).json(ApiResponse_1.default(true, e_1.message, e_1));
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); },
+    getPlaylistTracks: function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
+        var id, playlistWithTracks, e_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    id = request.params.id;
+                    return [4 /*yield*/, Playlist_1.default
+                            .playlistInstance()
+                            .getPlaylistTracks({ playlistId: id, userId: request.user.id })];
+                case 1:
+                    playlistWithTracks = _a.sent();
+                    if (!playlistWithTracks)
+                        throw new Error("failed to retrieve playlist with its tracks");
+                    response.status(200).json(ApiResponse_1.default(false, "playlist with its tracks compiled", { playlist: playlistWithTracks }));
+                    return [3 /*break*/, 3];
+                case 2:
+                    e_2 = _a.sent();
+                    response.status(200).json(ApiResponse_1.default(true, e_2.message, e_2));
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); },
     createPlaylist: function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-        var name, playlistData, c, playlist, e_1;
+        var name, playlistData, c, playlist, e_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -69,15 +116,15 @@ var PlaylistController = {
                     response.status(200).json(ApiResponse_1.default(true, "Playlist \"" + name + "\" created!", { playlist: playlist }));
                     return [3 /*break*/, 4];
                 case 3:
-                    e_1 = _a.sent();
-                    response.status(500).json(ApiResponse_1.default(true, e_1.message, e_1));
+                    e_3 = _a.sent();
+                    response.status(500).json(ApiResponse_1.default(true, e_3.message, e_3));
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
         });
     }); },
     addTrackToPlaylist: function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-        var _a, playlistId, trackId, addTrack, e_2;
+        var _a, playlistId, trackId, addTrack, e_4;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -102,15 +149,15 @@ var PlaylistController = {
                     response.status(200).json(ApiResponse_1.default(false, "Added track to playlist", { playlistTrack: addTrack }));
                     return [3 /*break*/, 5];
                 case 4:
-                    e_2 = _b.sent();
-                    response.status(500).json(ApiResponse_1.default(true, e_2.message, e_2));
+                    e_4 = _b.sent();
+                    response.status(500).json(ApiResponse_1.default(true, e_4.message, e_4));
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];
             }
         });
     }); },
     deletePlaylist: function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-        var id, deletedPlaylist, e_3;
+        var id, deletedPlaylist, e_5;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -126,15 +173,15 @@ var PlaylistController = {
                     response.status(200).json(ApiResponse_1.default(false, "Playlist deleted", { playlist: deletedPlaylist }));
                     return [3 /*break*/, 3];
                 case 2:
-                    e_3 = _a.sent();
-                    response.status(500).json(ApiResponse_1.default(true, e_3.message, e_3));
+                    e_5 = _a.sent();
+                    response.status(500).json(ApiResponse_1.default(true, e_5.message, e_5));
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
         });
     }); },
     deletePlaylistTrack: function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-        var id, deletedPlaylistTrack, e_4;
+        var id, deletedPlaylistTrack, e_6;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -150,8 +197,8 @@ var PlaylistController = {
                     response.status(200).json(ApiResponse_1.default(false, "Track deleted from playlist", { track: deletedPlaylistTrack }));
                     return [3 /*break*/, 3];
                 case 2:
-                    e_4 = _a.sent();
-                    response.status(500).json(ApiResponse_1.default(true, e_4.message, e_4));
+                    e_6 = _a.sent();
+                    response.status(500).json(ApiResponse_1.default(true, e_6.message, e_6));
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
