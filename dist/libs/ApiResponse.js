@@ -12,6 +12,9 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 function ApiResponse(error, message, response) {
+    if (response instanceof Error) {
+        console.log(response);
+    }
     return __assign({ error: error, message: message }, response);
 }
 exports.default = ApiResponse;

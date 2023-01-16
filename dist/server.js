@@ -12,6 +12,7 @@ var express_fileupload_1 = __importDefault(require("express-fileupload"));
 var ErrorMid_1 = __importDefault(require("./routers/middleware/ErrorMid"));
 //import routes
 var index_1 = __importDefault(require("./routers/index"));
+var createDummyUser_1 = __importDefault(require("./createDummyUser"));
 var ApiKeyMiddleware_1 = __importDefault(require("./routers/middleware/ApiKeyMiddleware"));
 var AddUserMiddleware_1 = __importDefault(require("./routers/middleware/AddUserMiddleware"));
 //init
@@ -40,11 +41,11 @@ app.use(BASE_URL + "/tracks", MIDDLWARES, index_1.default.tracksRouter);
 app.use(BASE_URL + "/playlists", MIDDLWARES, index_1.default.playlistRouter);
 //catch all error
 app.use(ErrorMid_1.default);
-// createUser({
-//     name: "Tshepang",
-//     email: "tshepang.maila@ayoba.com",
-//     password: "my-password"
-// })
+createDummyUser_1.default({
+    name: "Tshepang",
+    email: "tshepang.maila@ayoba.com",
+    password: "my-password"
+});
 var port = process.env.PORT || 2828;
 app.listen(port, function () { return console.log("Server Running on PORT " + port); });
 //# sourceMappingURL=server.js.map
