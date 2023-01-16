@@ -1,5 +1,5 @@
 import { PrismaClientValidationError } from '@prisma/client/runtime';
-import { PrismaClient, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma, Track } from '@prisma/client';
 import DatabaseSingleton from '../prisma/DatabaseSingleton';
 
 
@@ -93,10 +93,29 @@ class Playlist {
          */
         try {
             
-            return await this.db.playlist.findFirst({
+            const playlist = await this.db.playlist.findFirst({
                 where: {id: ids.playlistId, userId: ids.userId},
                 include: {playlistTracks: true}
             })
+
+            if(playlist === null) return []
+
+            const playlistWithTracks: {name: string, 
+                                       id: string,
+                                       created_at: Date, 
+                                       playlistTracks: Track[]} = {name: playlist.name, id: playlist.id, created_at: playlist.created_at, playlistTracks: []}
+
+            
+            for(let ptrack of playlist.playlistTracks){
+
+                const t = await this.db.track.findFirst({where: {id: ptrack.trackId}})
+                if(!t) return
+
+                playlistWithTracks.playlistTracks.push(t)
+
+            }
+
+            return playlistWithTracks
 
         } catch (e: any) {
             if(e instanceof PrismaClientValidationError) return null
