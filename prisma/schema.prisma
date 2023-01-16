@@ -1,6 +1,11 @@
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 generator client {
@@ -10,8 +15,8 @@ generator client {
 // all models
 model Admin {
   id         String   @id @default(uuid())
-  name       String   @db.VarChar(100)
-  email      String   @unique @db.VarChar(155)
+  name       String   
+  email      String   @unique
   password   String
   created_at DateTime @default(now())
 
@@ -25,13 +30,13 @@ model Admin {
 
 model Track {
   id          String    @id @default(uuid())
-  name        String    @db.VarChar(100)
-  album       String    @db.VarChar(100)
-  artist      String    @db.VarChar(100)
+  name        String    
+  album       String    
+  artist      String    
   duration    Int
   year        Int
-  artwork     String    @db.Text()
-  audio       String    @db.Text()
+  artwork     String    
+  audio       String    
   created_at  DateTime  @default(now())
 
   playlistTracks    PlaylistTracks[]
@@ -45,7 +50,7 @@ model Track {
 
 model Playlist {
   id          String    @id @default(uuid())
-  name        String    @db.VarChar(100)
+  name        String    
   created_at  DateTime  @default(now())
 
   playlistTracks    PlaylistTracks[]
