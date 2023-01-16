@@ -1,8 +1,9 @@
+import { LikedTracks, Track } from "@prisma/client"
 import fileUpload from "express-fileupload"
 
 export type MusoFile = fileUpload.UploadedFile | fileUpload.UploadedFile[]  | undefined 
 
-export type Track = {
+export type TrackType = {
     userId      : string
     name        : string
     album       : string
@@ -20,6 +21,22 @@ export type Playlist = {
 }
 
 export type PlaylistTrack = {
-    track       : Track,
+    track       : TrackType,
     playlist    : Playlist
+}
+
+export type LikedTrack = {
+    userId      : string
+    name        : string
+    album       : string
+    artist      : string
+    duration    : number
+    year        : number
+    artwork     : string
+    audio       : string
+    likedTracks : boolean
+}
+
+export interface TrackWithLikedTrack extends Track {
+    likedTracks: LikedTracks[]
 }
