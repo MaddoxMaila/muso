@@ -49,11 +49,11 @@ app.use(`${BASE_URL}/playlists`, MIDDLWARES,Routers.playlistRouter)
 //catch all error
 app.use(ErrorMid);
 
-// createUser({
-//     name: "Tshepang",
-//     email: "tshepang.maila@ayoba.com",
-//     password: "my-password"
-// })
+createUser({
+    name: "Tshepang",
+    email: "tshepang.maila@ayoba.com",
+    password: "my-password"
+})
 
 
 const port = process.env.PORT || 2828;
