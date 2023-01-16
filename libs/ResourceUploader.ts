@@ -49,15 +49,14 @@ export const saveAudio = async (audioFile: UploadedFile) => {
 
 }
 
-export const isAllowedFile = async (file: UploadedFile | UploadedFile[]) => {
+export const isAllowedFile = (file: UploadedFile | UploadedFile[]) => {
     
     if(Array.isArray(file)) return false
 
-    const imgExts = ['jpeg', 'jpg', 'png', 'webm'] 
     const ext: string = fileExt(file.name)
 
     return ext === "jpeg" || ext === "jpg" || ext === 'png' || ext === 'webm' || ext === 'mp3' || ext === 'm4a' || ext === 'flac'
-    
+
 }
 
 
