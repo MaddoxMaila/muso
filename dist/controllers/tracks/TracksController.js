@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 exports.__esModule = true;
 var express_validator_1 = require("express-validator");
 var ApiResponse_1 = __importDefault(require("../../libs/ApiResponse"));
+var ResourceUploader_1 = require("../../libs/ResourceUploader");
 var Track_1 = __importDefault(require("../../libs/Track"));
 var ValidationError_1 = __importDefault(require("../../libs/ValidationError"));
 var DatabaseSingleton_1 = __importDefault(require("../../prisma/DatabaseSingleton"));
@@ -111,9 +112,16 @@ var TracksController = {
                         throw new Error("Missing audio file");
                     if (!artwork)
                         throw new Error("Missing artwork file");
+                    // check for allow file extensions
+                    if (!ResourceUploader_1.isAllowedFile(audio))
+                        throw new Error("Unsupported file type, make sure it is an Audio file");
+                    if (!ResourceUploader_1.isAllowedFile(artwork))
+                        throw new Error("Unsupported file type, make sure it is an Image file");
                     errors = express_validator_1.validationResult(request);
                     if (!errors.isEmpty())
                         throw new ValidationError_1["default"]("failed validations", { errors: errors.array() });
+                    if (!parseInt(duration) || !parseInt(year))
+                        throw new Error("Supply valid numbers for track duration and year");
                     return [4 /*yield*/, Track_1["default"]
                             .getInstance()
                             .addTrack({ name: name, album: album, artist: artist, duration: parseInt(duration), year: parseInt(year), audio: audio, artwork: artwork, userId: (_d = request.user) === null || _d === void 0 ? void 0 : _d.id })];
@@ -132,32 +140,34 @@ var TracksController = {
         });
     }); },
     deleteTrack: function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-        var id, errors, track;
+        var id, errors, track, e_4;
         return __generator(this, function (_a) {
-            /**
-             * @description
-             * delete track of the specified id
-             */
-            try {
-                id = request.params.id;
-                errors = express_validator_1.validationResult(request);
-                if (!errors.isEmpty())
-                    throw new ValidationError_1["default"]("failed validations", { errors: errors.array() });
-                track = Track_1["default"]
-                    .getInstance()
-                    .deleteTrack(id);
-                if (!track)
-                    throw new Error("failed to delete track");
-                response.status(200).json(ApiResponse_1["default"](false, "saved track successfully", { track: track }));
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    id = request.params.id;
+                    errors = express_validator_1.validationResult(request);
+                    if (!errors.isEmpty())
+                        throw new ValidationError_1["default"]("failed validations", { errors: errors.array() });
+                    return [4 /*yield*/, Track_1["default"]
+                            .getInstance()
+                            .deleteTrack(id)];
+                case 1:
+                    track = _a.sent();
+                    if (!track)
+                        throw new Error("failed to delete track");
+                    response.status(200).json(ApiResponse_1["default"](false, "deleted track successfully", { track: track }));
+                    return [3 /*break*/, 3];
+                case 2:
+                    e_4 = _a.sent();
+                    response.status(500).json(ApiResponse_1["default"](true, e_4.message, e_4));
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
-            catch (e) {
-                response.status(500).json(ApiResponse_1["default"](true, e.message, e));
-            }
-            return [2 /*return*/];
         });
     }); },
     likeTrack: function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-        var id, errors, like, e_4;
+        var id, errors, like, e_5;
         var _a;
         return __generator(this, function (_b) {
             switch (_b.label) {
@@ -177,15 +187,15 @@ var TracksController = {
                     response.status(200).json(ApiResponse_1["default"](false, (like.liked ? 'Liked' : 'Unliked') + " track", { track: like }));
                     return [3 /*break*/, 3];
                 case 2:
-                    e_4 = _b.sent();
-                    response.status(500).json(ApiResponse_1["default"](true, e_4.message, e_4));
+                    e_5 = _b.sent();
+                    response.status(500).json(ApiResponse_1["default"](true, e_5.message, e_5));
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
         });
     }); },
     getLikedTracks: function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-        var likedTracks, e_5;
+        var likedTracks, e_6;
         var _a;
         return __generator(this, function (_b) {
             switch (_b.label) {
@@ -201,8 +211,8 @@ var TracksController = {
                     response.status(200).json(ApiResponse_1["default"](false, likedTracks.length > 0 ? "Tracks you have liked" : "No liked tracks found", { tracks: likedTracks, user: request.user }));
                     return [3 /*break*/, 3];
                 case 2:
-                    e_5 = _b.sent();
-                    response.status(500).json(ApiResponse_1["default"](true, e_5.message, e_5));
+                    e_6 = _b.sent();
+                    response.status(500).json(ApiResponse_1["default"](true, e_6.message, e_6));
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }

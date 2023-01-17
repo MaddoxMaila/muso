@@ -50,7 +50,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-var MusoResourceUploader_1 = require("./MusoResourceUploader");
+var ResourceUploader_1 = require("./ResourceUploader");
 var DatabaseSingleton_1 = __importDefault(require("../prisma/DatabaseSingleton"));
 var runtime_1 = require("@prisma/client/runtime");
 var Muso = /** @class */ (function () {
@@ -59,7 +59,8 @@ var Muso = /** @class */ (function () {
     }
     Muso.prototype.getAllTracks = function (userId) {
         return __awaiter(this, void 0, void 0, function () {
-            var e_1;
+            var tracks, trackWithLiked_1, e_1;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -67,8 +68,19 @@ var Muso = /** @class */ (function () {
                         return [4 /*yield*/, this.db.track.findMany({
                                 where: { userId: userId },
                                 include: { likedTracks: true }
-                            })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                            })
+                            // data returned should have a field specifying if the track is Liked or not
+                        ];
+                    case 1:
+                        tracks = _a.sent();
+                        trackWithLiked_1 = [];
+                        tracks.forEach(function (track) {
+                            var likedTrack = _this.addLikedFieldToTrack(track);
+                            if (!likedTrack)
+                                return;
+                            trackWithLiked_1.push(likedTrack);
+                        });
+                        return [2 /*return*/, trackWithLiked_1];
                     case 2:
                         e_1 = _a.sent();
                         if (e_1 instanceof runtime_1.PrismaClientValidationError)
@@ -79,9 +91,12 @@ var Muso = /** @class */ (function () {
             });
         });
     };
+    Muso.prototype.addLikedFieldToTrack = function (track) {
+        return __assign(__assign({}, track), { likedTracks: (track === null || track === void 0 ? void 0 : track.likedTracks.length) > 0 });
+    };
     Muso.prototype.getTrack = function (trackId) {
         return __awaiter(this, void 0, void 0, function () {
-            var e_2;
+            var track, e_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -89,9 +104,14 @@ var Muso = /** @class */ (function () {
                         return [4 /*yield*/, this.db.track.findUnique({
                                 where: {
                                     id: trackId
-                                }
+                                },
+                                include: { likedTracks: true }
                             })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 1:
+                        track = _a.sent();
+                        if (!track)
+                            return [2 /*return*/, null];
+                        return [2 /*return*/, this.addLikedFieldToTrack(track)];
                     case 2:
                         e_2 = _a.sent();
                         if (e_2 instanceof runtime_1.PrismaClientValidationError)
@@ -113,12 +133,14 @@ var Muso = /** @class */ (function () {
                             ||
                                 (typeof track.audio !== "object" || Array.isArray(track.audio)))
                             throw Error("Please upload a valid file!");
-                        return [4 /*yield*/, MusoResourceUploader_1.saveArtwork(track.artwork)];
+                        return [4 /*yield*/, ResourceUploader_1.saveArtwork(track.artwork)];
                     case 1:
                         artwork_url = _a.sent();
-                        return [4 /*yield*/, MusoResourceUploader_1.saveAudio(track.audio)];
+                        return [4 /*yield*/, ResourceUploader_1.saveAudio(track.audio)];
                     case 2:
                         audio_url = _a.sent();
+                        if (!artwork_url || !audio_url)
+                            return [2 /*return*/, null];
                         return [4 /*yield*/, this.db.track.create({
                                 data: __assign(__assign({}, track), { audio: audio_url, artwork: artwork_url })
                             })];

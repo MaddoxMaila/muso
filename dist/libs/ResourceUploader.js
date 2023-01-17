@@ -36,48 +36,60 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.saveAudio = exports.saveArtwork = void 0;
+exports.isAllowedFile = exports.saveAudio = exports.saveArtwork = void 0;
 var crypto_1 = require("crypto");
 var newFileName = function (fileName) {
-    var name = fileName.split(".");
-    var ext = name[name.length - 1];
-    return crypto_1.randomUUID() + "." + ext;
+    return crypto_1.randomUUID() + "." + fileExt(fileName);
 };
-var PATH = "";
+var fileExt = function (fileName) {
+    var name = fileName.split(".");
+    return name[name.length - 1];
+};
 var saveArtwork = function (artworkFile) { return __awaiter(void 0, void 0, void 0, function () {
+    var PATH, e_1;
     return __generator(this, function (_a) {
-        /**
-         * @description
-         * Move artwork file and then create a url for the file in the server
-         * @param
-         *      artworkFile: UploadedFile - file to be moved in the server
-         */
-        artworkFile.name = newFileName(artworkFile.name);
-        PATH = process.env.ARTWORK_PATH || './public/artwork';
-        artworkFile.mv(PATH + "/" + artworkFile.name, function (error) {
-            if (error)
-                throw Error("failed to save artwork");
-        });
-        return [2 /*return*/, "/public/artwork/" + artworkFile.name];
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                artworkFile.name = newFileName(artworkFile.name);
+                PATH = process.env.ARTWORK_PATH || './public/artwork';
+                return [4 /*yield*/, artworkFile.mv(PATH + "/" + artworkFile.name)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/, "/public/artwork/" + artworkFile.name];
+            case 2:
+                e_1 = _a.sent();
+                return [2 /*return*/, null];
+            case 3: return [2 /*return*/];
+        }
     });
 }); };
 exports.saveArtwork = saveArtwork;
 var saveAudio = function (audioFile) { return __awaiter(void 0, void 0, void 0, function () {
+    var PATH, e_2;
     return __generator(this, function (_a) {
-        /**
-         * @description
-         * Move audio file and then create a url for the file in the server
-         * @param
-         *      audioFile: UploadedFile - file to be moved in the server
-         */
-        audioFile.name = newFileName(audioFile.name);
-        PATH = process.env.AUDIO_PATH || './public/audios';
-        audioFile.mv(PATH + "/" + audioFile.name, function (error) {
-            if (error)
-                throw Error("failed to save audio");
-        });
-        return [2 /*return*/, "/public/artwork/" + audioFile.name];
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                audioFile.name = newFileName(audioFile.name);
+                PATH = process.env.AUDIO_PATH || './public/audios';
+                return [4 /*yield*/, audioFile.mv(PATH + "/" + audioFile.name)];
+            case 1:
+                _a.sent();
+                return [2 /*return*/, "/public/artwork/" + audioFile.name];
+            case 2:
+                e_2 = _a.sent();
+                return [2 /*return*/, null];
+            case 3: return [2 /*return*/];
+        }
     });
 }); };
 exports.saveAudio = saveAudio;
-//# sourceMappingURL=MusoResourceUploader.js.map
+var isAllowedFile = function (file) {
+    if (Array.isArray(file))
+        return false;
+    var ext = fileExt(file.name);
+    return ext === "jpeg" || ext === "jpg" || ext === 'png' || ext === 'webm' || ext === 'mp3' || ext === 'm4a' || ext === 'flac';
+};
+exports.isAllowedFile = isAllowedFile;
+//# sourceMappingURL=ResourceUploader.js.map
