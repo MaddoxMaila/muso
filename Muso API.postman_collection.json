@@ -34,7 +34,7 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "Lifestyle",
+									"value": "La$t resort",
 									"type": "default"
 								},
 								{
@@ -44,12 +44,12 @@
 								},
 								{
 									"key": "artist",
-									"value": "Areece",
+									"value": "Letlhogonolo",
 									"type": "default"
 								},
 								{
 									"key": "duration",
-									"value": "190",
+									"value": "200",
 									"type": "default"
 								},
 								{
@@ -223,7 +223,7 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "Hip Hop",
+									"value": "Soul",
 									"type": "default"
 								}
 							]
@@ -337,7 +337,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{api_url}}/search/?q=Hop",
+					"raw": "{{api_url}}/search/?q=",
 					"host": [
 						"{{api_url}}"
 					],
@@ -348,7 +348,7 @@
 					"query": [
 						{
 							"key": "q",
-							"value": "Hop"
+							"value": ""
 						}
 					]
 				}
