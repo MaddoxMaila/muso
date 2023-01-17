@@ -43,7 +43,7 @@ app.use(BASE_URL + "/search", MIDDLWARES, index_1["default"].searchRouter);
 //catch all error
 app.use(ErrorMid_1["default"]);
 /**
- * Some of the functionalities I created needs user,
+ * Some of the functionalities I created needs a user,
  * This would just create a user one time on a first server up, and avoids creating the user again after subsequent application starts
  */
 createDummyUser_1["default"]({
