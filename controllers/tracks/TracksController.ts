@@ -90,6 +90,8 @@ const TracksController = {
              const errors = validationResult(request);
              if (!errors.isEmpty()) throw new ValidationError("failed validations", {errors: errors.array()})
 
+             if(!parseInt(duration) || !parseInt(year)) throw new Error("Supply valid numbers for track duration and year")
+
              const track = await TracksSingleton
                                               .getInstance()
                                               .addTrack({name, album, artist, duration: parseInt(duration), year: parseInt(year), audio, artwork, userId: request.user?.id})

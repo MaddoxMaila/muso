@@ -86,8 +86,10 @@ class Muso {
                 (typeof track.audio !== "object" || Array.isArray(track.audio))
             ) throw Error("Please upload a valid file!")
     
-            const artwork_url: string = await saveArtwork(track.artwork)
-            const audio_url: string = await saveAudio(track.audio)
+            const artwork_url: string | null = await saveArtwork(track.artwork)
+            const audio_url: string | null = await saveAudio(track.audio)
+
+            if(!artwork_url || !audio_url) return null
     
             return await this.db.track.create({
                 data: {

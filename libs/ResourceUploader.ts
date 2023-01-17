@@ -18,15 +18,18 @@ export const saveArtwork = async (artworkFile: UploadedFile) => {
      * @param
      *      artworkFile: UploadedFile - file to be moved in the server
      */
-    artworkFile.name = newFileName(artworkFile.name)
+    try {
+        artworkFile.name = newFileName(artworkFile.name)
 
-    const PATH: string = process.env.ARTWORK_PATH || './public/artwork'
+        const PATH: string = process.env.ARTWORK_PATH || './public/artwork'
 
-    artworkFile.mv(`${PATH}/${artworkFile.name}`, error => {
-        if(error) throw Error("failed to save artwork")
-    })
+        await artworkFile.mv(`${PATH}/${artworkFile.name}`)
 
-    return `/public/artwork/${artworkFile.name}`
+        return `/public/artwork/${artworkFile.name}`
+        
+    } catch (e: any) {
+        return null
+    }
 
 }
 
@@ -37,15 +40,18 @@ export const saveAudio = async (audioFile: UploadedFile) => {
      * @param
      *      audioFile: UploadedFile - file to be moved in the server
      */
-    audioFile.name = newFileName(audioFile.name)
+    try {
+        audioFile.name = newFileName(audioFile.name)
 
-    const PATH: string = process.env.AUDIO_PATH || './public/audios'
-    
-    audioFile.mv(`${PATH}/${audioFile.name}`, error => {
-        if(error) throw Error("failed to save audio")
-    })
+        const PATH: string = process.env.AUDIO_PATH || './public/audios'
+        
+        await audioFile.mv(`${PATH}/${audioFile.name}`)
 
-    return `/public/artwork/${audioFile.name}`
+        return `/public/artwork/${audioFile.name}`
+
+    } catch (e: any) {
+        return null
+    }
 
 }
 
